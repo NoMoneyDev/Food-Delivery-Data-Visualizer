@@ -1,8 +1,9 @@
+import abc
 import tkinter as tk
 from tkinter import ttk
 import matplotlib as plt
 import seaborn as sns
-import ABC
+from abc import abstractmethod
 from data_manager import *
 
 
@@ -22,7 +23,7 @@ class UI:
         self.menubar.add_cascade(label="Bar Graph", command=lambda: self.change_tab('bar'))
         self.menubar.add_cascade(label="Data Story", command=lambda: self.change_tab('story'))
 
-        self.data_tab = Data_Tab()
+        self.data_tab = Data_Tab(self.root)
 
         self.component_install()
         self.change_tab('data')
@@ -41,7 +42,7 @@ class UI:
     def run(self):
         self.root.mainloop()
 
-@ABC.abc
+
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
@@ -49,6 +50,7 @@ class New_Tab(tk.Frame):
         self.components = []
         self.component_init()
 
+    @abstractmethod
     def component_init(self):
         pass
 
@@ -57,16 +59,22 @@ class New_Tab(tk.Frame):
             ele.pack()
 
 
-class Data_tab(New_Tab):
+class Data_Tab(New_Tab):
     def __init__(self, root):
-        super().__init__(root)
         self.data = Data_Manager()
+        super().__init__(root)
 
     def component_init(self):
         self.components = [self]
-        self.table = ttk.Treeview(columns=self.data.get_cols())
+        self.table = ttk.Treeview(self, columns=self.data.get_cols(), displaycolumns="#all", show="headings")
+        self.set_table_col()
+        self.table.insert('',tk.END, values=('Anand Restaurant','African','Zone C','Ordinary','Credit Card',1,80,39,5,1))
 
+        self.components += [self.table]
 
-
+    def set_table_col(self):
+        cols = self.data.get_cols()
+        for c in cols:
+            self.table.heading(c, text=c)
 
 
