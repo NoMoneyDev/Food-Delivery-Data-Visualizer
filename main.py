@@ -1,5 +1,7 @@
 from UI import *
 
+
 if __name__ == '__main__':
-    ui = UI()
+    root = tk.Tk()
+    ui = UI(root)
     ui.run()
