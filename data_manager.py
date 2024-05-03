@@ -12,3 +12,9 @@ class Data_Manager:
     @property
     def data(self):
         return self.__data
+
+    def get_rows(self):
+        returnlist = []
+        for row in self.data.itertuples():
+            returnlist += [list(row)[1:]]
+        return returnlist

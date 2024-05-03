@@ -1,4 +1,4 @@
-RestaurantName,Cuisine,Zone,Category,Payment Mode,Quantity of Items,Cost,Delivery Time Taken (mins),Customer Rating-Food,Customer Rating-Delivery
+RestaurantName,Cuisine,Zone,Category,Payment Mode,Quantity of Items,Cost,Delivery Time,Food Rating,Delivery Rating
 Anand Restaurant,African,Zone C,Ordinary,Credit Card,1,80,39,5,1
 The Cave Hotel,Continental,Zone B,Pro,Debit Card,1,28,29,3,2
 Zam Zam,Arabian,Zone C,Ordinary,Credit Card,1,29,22,5,5
