@@ -22,6 +22,7 @@ class UI:
         self.menubar.add_cascade(label="Histogram", command=lambda: self.change_tab('hist'))
         self.menubar.add_cascade(label="Bar Graph", command=lambda: self.change_tab('bar'))
         self.menubar.add_cascade(label="Data Story", command=lambda: self.change_tab('story'))
+        self.menubar.add_cascade(label="Quit", command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
         self.bar_tab = Bar_Tab(self.root)

@@ -1,0 +1,6 @@
+abc
+tkinter
+matplotlib
+seaborn
+pandas
+numpy
