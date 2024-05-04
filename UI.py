@@ -91,6 +91,7 @@ class UI:
         self.root.mainloop()
 
 
+#abstract class for every tabs
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
