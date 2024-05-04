@@ -7,47 +7,77 @@ from abc import abstractmethod
 from data_manager import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 matplotlib.use('TkAgg')
+import sv_ttk
 
 
 class UI:
     def __init__(self, root):
         self.root = root
+        sv_ttk.set_theme("dark", root=self.root)
         self.root.title("Food Delivery Data Visualizer")
+        self.create_style()
         self.component_init()
 
-    def component_init(self):
-        self.menubar = tk.Menu(self.root)
+    def create_style(self):
+        self.label_font = ttk.Style()
+        self.label_font.configure('TLabel', font=('Arial',18))
 
-        self.menubar.add_cascade(label="Data", command=lambda: self.change_tab('data'))
-        self.menubar.add_cascade(label="Histogram", command=lambda: self.change_tab('hist'))
-        self.menubar.add_cascade(label="Bar Graph", command=lambda: self.change_tab('bar'))
-        self.menubar.add_cascade(label="Data Story", command=lambda: self.change_tab('story'))
-        self.menubar.add_cascade(label="Quit", command=self.root.destroy)
+    def component_init(self):
+        self.menu_frame = tk.Frame(self.root)
+        self.data_tab_button = tk.Button(self.menu_frame, text='Data', command=lambda: self.change_tab('data'))
+        self.hist_tab_button = tk.Button(self.menu_frame, text='Histogram', command=lambda: self.change_tab('hist'))
+        self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph', command=lambda: self.change_tab('bar'))
+        self.story_tab_button = tk.Button(self.menu_frame, text='Story', command=lambda: self.change_tab('story'))
+        self.quit_button = tk.Button(self.menu_frame, text='Quit', command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
         self.bar_tab = Bar_Tab(self.root)
 
+        self.config_grid()
         self.component_install()
 
         # Defualt tab
-        self.current_tab = self.data_tab
-        self.change_tab('data')
+        # No matter how much I tried, I cannot make the default button text yellow on launch. I do not know why so, it is what it is.
+        self.current_tab = self.bar_tab
+        self.change_tab('bar')
+
+    def config_grid(self):
+        self.menu_frame.columnconfigure((0,1,2,3,4), weight=1, uniform=True)
+        self.menu_frame.rowconfigure(0, weight=1, uniform=True)
 
     def component_install(self):
-        self.root.config(menu=self.menubar)
+        self.data_tab_button.grid(column=0, row=0, sticky=tk.NSEW)
+        self.hist_tab_button.grid(column=1, row=0, sticky=tk.NSEW)
+        self.bar_tab_button.grid(column=2, row=0, sticky=tk.NSEW)
+        self.story_tab_button.grid(column=3, row=0, sticky=tk.NSEW)
+        self.quit_button.grid(column=4, row=0, sticky=tk.NSEW)
+
+        self.menu_frame.pack(side=tk.TOP, fill=tk.X)
 
     def change_tab(self, tab):
+        self.reset_menu_color()
         self.current_tab.unpack()
         match tab:
             case 'data':
+                self.data_tab_button.config(bg='Yellow', fg='Black')
                 self.current_tab = self.data_tab
             case 'hist':
                 pass
             case 'bar':
+                self.bar_tab_button.configure(bg='Yellow', fg='Black')
                 self.current_tab = self.bar_tab
+            case 'story':
+                pass
             case _:
                 pass
         self.current_tab.pack_tab()
+
+    def reset_menu_color(self):
+        self.data_tab_button.config(bg='Black', fg='White')
+        self.hist_tab_button.config(bg='Black', fg='White')
+        self.bar_tab_button.config(bg='Black', fg='White')
+        self.story_tab_button.config(bg='Black', fg='White')
+        self.quit_button.config(bg='Black', fg='White')
 
     @property
     def screenwidth(self):
@@ -64,7 +94,7 @@ class UI:
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
-        super().__init__()
+        super().__init__(root)
         self.data = Data_Manager()
         self.component_init()
         self.component_install()
@@ -88,17 +118,16 @@ class Data_Tab(New_Tab):
         self.grid_config()
 
     def component_init(self):
-        self.table_frame = tk.Frame(self)
-        self.filters_frame = tk.Frame(self)
+        self.table_frame = ttk.Frame(self)
+        self.filters_frame = ttk.Frame(self)
         self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(), displaycolumns="#all", show="headings")
         self.table_col_config()
         self.set_table_col()
         self.insert_data()
-        self.filter_text = tk.Label(self.filters_frame, text="Filters", font=('Arial', 14))
-        self.quantity_filter_text = tk.Label(self.filters_frame, text="Quantity of Items")
+        self.filter_text = ttk.Label(self.filters_frame, text="Filters")
+        self.quantity_filter_text = ttk.Label(self.filters_frame, text="Quantity of Items")
         self.quantity_filter_var = tk.StringVar(self.filters_frame, "1-7, 5")
-        self.quantity_filter_var
-        self.quantity_filter_entry = tk.Entry(self.filters_frame, textvariable=self.quantity_filter_var)
+        self.quantity_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.quantity_filter_var)
 
     def component_install(self):
         self.table.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -153,32 +182,26 @@ class Bar_Tab(New_Tab):
         self.grid_config()
 
     def component_init(self):
-        self.graph_frame = tk.Frame(self)
-        self.config_frame = tk.Frame(self)
+        self.graph_frame = ttk.Frame(self)
+        self.config_frame = ttk.Frame(self)
 
         self.graph_img = FigureCanvasTkAgg(self.data.figure, master=self.graph_frame)
         NavigationToolbar2Tk(self.graph_img, self)
 
-        self.config_text = tk.Label(self.config_frame, text="Config", font=('Arial', 14))
+        self.config_text = ttk.Label(self.config_frame, text="Config")
 
-        self.bar_config_text = tk.Label(self.config_frame, text="Bar")
-        self.bar_config_var = tk.StringVar()
-        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_cols(),
-                                                textvariable=self.bar_config_var, state='readonly')
+        self.bar_config_text = ttk.Label(self.config_frame, text="Bar")
+        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_cols(), state='readonly')
         self.bar_config_combobox.current(0)
         self.bar_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
-        self.height_config_text = tk.Label(self.config_frame, text="Height")
-        self.height_config_var = tk.StringVar()
-        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_ordinal_cols(),
-                                                   textvariable=self.height_config_var, state='readonly')
-        self.height_config_combobox.current(1)
+        self.height_config_text = ttk.Label(self.config_frame, text="Height")
+        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_ordinal_cols(), state='readonly')
+        self.height_config_combobox.current(0)
         self.height_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
-        self.values_config_text = tk.Label(self.config_frame, text="Values")
-        self.values_config_var = tk.StringVar()
-        self.values_config_combobox = ttk.Combobox(self.config_frame, values=['AVERAGE', 'SUM'],
-                                                   textvariable=self.values_config_var, state='readonly')
+        self.values_config_text = ttk.Label(self.config_frame, text="Values")
+        self.values_config_combobox = ttk.Combobox(self.config_frame, values=['AVERAGE', 'SUM'], state='readonly')
         self.values_config_combobox.current(0)
         self.values_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
@@ -195,7 +218,7 @@ class Bar_Tab(New_Tab):
         self.height_config_combobox.grid(column=1, row=2, sticky=tk.NW, padx=5)
         self.values_config_text.grid(column=2, row=1, sticky=tk.SW, padx=5)
         self.values_config_combobox.grid(column=2, row=2, sticky=tk.NW, padx=5)
-        self.config_frame.pack(padx=10, side=tk.RIGHT)
+        self.config_frame.pack(padx=10, side=tk.RIGHT, fill=tk.BOTH)
 
     def grid_config(self):
         self.columnconfigure(0)
@@ -219,7 +242,7 @@ class Bar_Tab(New_Tab):
         self.config_frame.rowconfigure(9, weight=1, uniform=True)
 
     def handle_graph(self, *args):
-        self.data.bar_graph(self.bar_config_var.get(), self.height_config_var.get(), self.values_config_var.get())
+        self.data.bar_graph(self.bar_config_combobox.get(), self.height_config_combobox.get(), self.values_config_combobox.get())
         self.graph_img.draw()
 
 

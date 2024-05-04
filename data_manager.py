@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
 import numpy as np
-matplotlib.use('TkAgg')
 
 
 class Data_Manager:
@@ -12,7 +11,7 @@ class Data_Manager:
         self.ax = self.figure.add_subplot()
 
     def get_cols(self):
-        return list(self.data.columns)
+        return self.data.columns.tolist()
 
     def get_ordinal_cols(self):
         return ['Quantity of Items','Cost','Delivery Time','Food Rating','Delivery Rating']
@@ -31,7 +30,7 @@ class Data_Manager:
         h_val = []
         self.ax.clear()
         df = self.data
-        cols = sorted([col for col in df[bar].unique() if col is not np.nan])
+        cols = df[bar].unique().tolist()
         match val:
             case 'SUM':
                 for col in cols:

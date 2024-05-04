@@ -1,6 +1,5 @@
-abc
-tkinter
 matplotlib
 seaborn
 pandas
 numpy
+sv-ttk
