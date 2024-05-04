@@ -40,12 +40,10 @@ class UI:
         self.current_tab.unpack()
         match tab:
             case 'data':
-                print("Changed Tab to 'Data'")
                 self.current_tab = self.data_tab
             case 'hist':
                 pass
             case 'bar':
-                print("Changed Tab to 'Bar Graph'")
                 self.current_tab = self.bar_tab
             case _:
                 pass
@@ -221,10 +219,8 @@ class Bar_Tab(New_Tab):
         self.config_frame.rowconfigure(9, weight=1, uniform=True)
 
     def handle_graph(self, *args):
-        print('called')
         self.data.bar_graph(self.bar_config_var.get(), self.height_config_var.get(), self.values_config_var.get())
         self.graph_img.draw()
-        print('plotted')
 
 
 
