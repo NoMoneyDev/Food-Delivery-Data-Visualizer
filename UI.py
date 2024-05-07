@@ -32,6 +32,7 @@ class UI:
 
         self.data_tab = Data_Tab(self.root)
         self.bar_tab = Bar_Tab(self.root)
+        self.hist_tab = Hist_Tab(self.root)
 
         self.config_grid()
         self.component_install()
@@ -62,7 +63,8 @@ class UI:
                 self.data_tab_button.config(bg='Yellow', fg='Black')
                 self.current_tab = self.data_tab
             case 'hist':
-                pass
+                self.hist_tab_button.config(bg='Yellow', fg='Black')
+                self.current_tab = self.hist_tab
             case 'bar':
                 self.bar_tab_button.configure(bg='Yellow', fg='Black')
                 self.current_tab = self.bar_tab
@@ -177,6 +179,92 @@ class Data_Tab(New_Tab):
         self.pack_forget()
 
 
+class Hist_Tab(New_Tab):
+    def __init__(self, root):
+        super().__init__(root)
+        self.grid_config()
+
+    def component_init(self):
+        self.graph_frame = ttk.Frame(self)
+        self.selection_frame = ttk.Frame(self)
+
+        self.graph_img = FigureCanvasTkAgg(self.data.figure, master=self.graph_frame)
+        NavigationToolbar2Tk(self.graph_img, self)
+
+        self.restaurant_button = tk.Button(self.selection_frame, text="Restaurant Name", bg="Black", command=lambda: self.handle_graph('Restaurant Name'))
+        self.cuisine_button = tk.Button(self.selection_frame, text="Cuisine", bg="Black", command=lambda: self.handle_graph('Cuisine'))
+        self.zone_button = tk.Button(self.selection_frame, text="Zone", bg="Black", command=lambda: self.handle_graph('Zone'))
+        self.category_button = tk.Button(self.selection_frame, text="Category", bg="Black", command=lambda: self.handle_graph('Category'))
+        self.payment_button = tk.Button(self.selection_frame, text="Payment Mode", bg="Black", command=lambda: self.handle_graph('Payment Mode'))
+        self.quantity_button = tk.Button(self.selection_frame, text="Quantity of Items", bg="Black", command=lambda: self.handle_graph('Quantity of Items'))
+        self.delivery_button = tk.Button(self.selection_frame, text="Delivery Time", bg="Black", command=lambda: self.handle_graph('Delivery Time'))
+        self.food_rate_button = tk.Button(self.selection_frame, text="Food Rating", bg="Black", command=lambda: self.handle_graph('Food Rating'))
+        self.deli_rate_button = tk.Button(self.selection_frame, text="Delivery Rating", bg="Black", command=lambda: self.handle_graph('Delivery Rating'))
+
+        self.handle_graph('Cuisine')
+
+    def component_install(self):
+        self.graph_img.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        self.graph_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        self.restaurant_button.grid(column=0, row=0, sticky=tk.NSEW)
+        self.cuisine_button.grid(column=1, row=0, sticky=tk.NSEW)
+        self.zone_button.grid(column=2, row=0, sticky=tk.NSEW)
+        self.category_button.grid(column=3, row=0, sticky=tk.NSEW)
+        self.payment_button.grid(column=4, row=0, sticky=tk.NSEW)
+        self.quantity_button.grid(column=5, row=0, sticky=tk.NSEW)
+        self.delivery_button.grid(column=6, row=0, sticky=tk.NSEW)
+        self.food_rate_button.grid(column=7, row=0, sticky=tk.NSEW)
+        self.deli_rate_button.grid(column=8, row=0, sticky=tk.NSEW)
+        self.selection_frame.pack(side=tk.TOP, fill=tk.X)
+
+    def grid_config(self):
+        self.columnconfigure(0)
+        self.columnconfigure(1)
+
+        self.rowconfigure(0, weight=1)
+
+        self.selection_frame.columnconfigure((0,1,2,3,4,5,6,7,8), weight=1, uniform=True)
+        self.selection_frame.rowconfigure(0, weight=0)
+
+
+    def handle_graph(self, col):
+        self.reset_button_color()
+        match col:
+            case 'Restaurant Name':
+                self.restaurant_button.config(bg='Yellow', fg='Black')
+            case 'Cuisine':
+                self.cuisine_button.config(bg='Yellow', fg='Black')
+            case 'Zone':
+                self.zone_button.config(bg='Yellow', fg='Black')
+            case 'Category':
+                self.category_button.config(bg='Yellow', fg='Black')
+            case 'Payment Mode':
+                self.category_button.config(bg='Yellow', fg='Black')
+            case 'Quantity of Items':
+                self.quantity_button.config(bg='Yellow', fg='Black')
+            case 'Delivery Time':
+                self.delivery_button.config(bg='Yellow', fg='Black')
+            case 'Food Rating':
+                self.food_rate_button.config(bg='Yellow', fg='Black')
+            case 'Delivery Rating':
+                self.deli_rate_button.config(bg='Yellow', fg='Black')
+        self.data.histogram(col)
+        self.graph_img.draw()
+
+    def reset_button_color(self):
+        self.restaurant_button.config(bg='Black', fg='White')
+        self.restaurant_button.config(bg='Black', fg='White')
+        self.cuisine_button.config(bg='Black', fg='White')
+        self.zone_button.config(bg='Black', fg='White')
+        self.category_button.config(bg='Black', fg='White')
+        self.payment_button.config(bg='Black', fg='White')
+        self.quantity_button.config(bg='Black', fg='White')
+        self.delivery_button.config(bg='Black', fg='White')
+        self.food_rate_button.config(bg='Black', fg='White')
+        self.deli_rate_button.config(bg='Black', fg='White')
+
+
 class Bar_Tab(New_Tab):
     def __init__(self, root):
         super().__init__(root)
@@ -192,12 +280,12 @@ class Bar_Tab(New_Tab):
         self.config_text = ttk.Label(self.config_frame, text="Config")
 
         self.bar_config_text = ttk.Label(self.config_frame, text="Bar")
-        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_cols(), state='readonly')
+        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_nominal_cols(), state='readonly')
         self.bar_config_combobox.current(0)
         self.bar_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
         self.height_config_text = ttk.Label(self.config_frame, text="Height")
-        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_ordinal_cols(), state='readonly')
+        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_numerical_cols(), state='readonly')
         self.height_config_combobox.current(0)
         self.height_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 

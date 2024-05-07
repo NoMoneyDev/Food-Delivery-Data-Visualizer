@@ -11,9 +11,12 @@ class Data_Manager:
         self.ax = self.figure.add_subplot()
 
     def get_cols(self):
-        return self.data.columns.tolist()
+        return  self.data.columns.tolist()
 
-    def get_ordinal_cols(self):
+    def get_nominal_cols(self):
+        return ['Restaurant Name','Cuisine','Zone','Category','Payment Mode']
+
+    def get_numerical_cols(self):
         return ['Quantity of Items','Cost','Delivery Time','Food Rating','Delivery Rating']
 
     @property
@@ -25,6 +28,20 @@ class Data_Manager:
         for row in self.data.itertuples():
             returnlist += [list(row)[1:]]
         return returnlist
+
+    def histogram(self, col):
+        self.ax.clear()
+        if col in self.get_nominal_cols():
+            cols = self.data[col].unique().tolist()
+            counts = []
+            for c in cols:
+                counts += [self.data[col].value_counts()[c]]
+            self.ax.bar(x=cols, height=counts)
+        else:
+            cols = self.data[col].unique().tolist()
+            self.ax.hist(self.data[col].tolist(), edgecolor="white", rwidth=1, align='left', bins=range(min(cols),max(cols)))
+        self.ax.set_xlabel(col)
+        self.ax.set_ylabel('Frequency')
 
     def bar_graph(self, bar, height, val):
         h_val = []
