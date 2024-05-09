@@ -9,6 +9,7 @@ class Data_Manager:
         self.__data = pd.read_csv("Orders Data.csv")
         self.figure = plt.Figure(figsize=(6, 4), dpi=100)
         self.ax = self.figure.add_subplot()
+        self.__active_hist = ''
 
     def get_cols(self):
         return  self.data.columns.tolist()
@@ -29,19 +30,31 @@ class Data_Manager:
             returnlist += [list(row)[1:]]
         return returnlist
 
-    def histogram(self, col):
+    def histogram(self, col, density):
         self.ax.clear()
+        if col == -99:
+            col = self.__active_hist
         if col in self.get_nominal_cols():
             cols = self.data[col].unique().tolist()
             counts = []
-            for c in cols:
-                counts += [self.data[col].value_counts()[c]]
+            if density:
+                for c in cols:
+                    counts += [self.data[col].value_counts()[c]/self.data[col].count()]
+            else:
+                for c in cols:
+                    counts += [self.data[col].value_counts()[c]]
             self.ax.bar(x=cols, height=counts)
+        elif col in ['Quantity of Items']:
+            self.ax.hist(self.data[col].tolist(), edgecolor="white", align='left', bins=[1,2,3,4,5,6,7], width=1, density=density)
+        elif col in ['Food Rating', 'Delivery Rating']:
+            self.ax.hist(self.data[col].tolist(), edgecolor="white", align='mid', bins=[1,2,3,4,5], width=1, density=density)
         else:
             cols = self.data[col].unique().tolist()
-            self.ax.hist(self.data[col].tolist(), edgecolor="white", rwidth=1, align='left', bins=range(min(cols),max(cols)))
+            self.ax.hist(self.data[col].tolist(), edgecolor="white", align='mid', bins=range(min(cols),max(cols),5), density=density)
+        self.ax.set_title(f"Histogram of {col}")
         self.ax.set_xlabel(col)
         self.ax.set_ylabel('Frequency')
+        self.__active_hist = col
 
     def bar_graph(self, bar, height, val):
         h_val = []

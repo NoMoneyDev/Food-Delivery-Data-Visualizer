@@ -201,7 +201,11 @@ class Hist_Tab(New_Tab):
         self.food_rate_button = tk.Button(self.selection_frame, text="Food Rating", bg="Black", command=lambda: self.handle_graph('Food Rating'))
         self.deli_rate_button = tk.Button(self.selection_frame, text="Delivery Rating", bg="Black", command=lambda: self.handle_graph('Delivery Rating'))
 
-        self.handle_graph('Cuisine')
+        self.density_var = tk.BooleanVar()
+        self.density_toggle = ttk.Checkbutton(self.selection_frame, variable=self.density_var, text='Density', onvalue=True, offvalue=False, command=lambda: self.handle_graph(-99))
+
+        # Default
+        self.handle_graph('Restaurant Name')
 
     def component_install(self):
         self.graph_img.get_tk_widget().pack(fill=tk.BOTH, expand=True)
@@ -216,6 +220,7 @@ class Hist_Tab(New_Tab):
         self.delivery_button.grid(column=6, row=0, sticky=tk.NSEW)
         self.food_rate_button.grid(column=7, row=0, sticky=tk.NSEW)
         self.deli_rate_button.grid(column=8, row=0, sticky=tk.NSEW)
+        self.density_toggle.grid(column=9, row=0, sticky=tk.NSEW)
         self.selection_frame.pack(side=tk.TOP, fill=tk.X)
 
     def grid_config(self):
@@ -224,12 +229,13 @@ class Hist_Tab(New_Tab):
 
         self.rowconfigure(0, weight=1)
 
-        self.selection_frame.columnconfigure((0,1,2,3,4,5,6,7,8), weight=1, uniform=True)
+        self.selection_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9), weight=1, uniform=True)
         self.selection_frame.rowconfigure(0, weight=0)
 
 
     def handle_graph(self, col):
-        self.reset_button_color()
+        if col != -99:
+            self.reset_button_color()
         match col:
             case 'Restaurant Name':
                 self.restaurant_button.config(bg='Yellow', fg='Black')
@@ -249,7 +255,7 @@ class Hist_Tab(New_Tab):
                 self.food_rate_button.config(bg='Yellow', fg='Black')
             case 'Delivery Rating':
                 self.deli_rate_button.config(bg='Yellow', fg='Black')
-        self.data.histogram(col)
+        self.data.histogram(col, self.density_var.get())
         self.graph_img.draw()
 
     def reset_button_color(self):
