@@ -8,6 +8,7 @@ class Data_Manager:
     def __init__(self):
         self.__data = pd.read_csv("Orders Data.csv")
         self.figure = plt.Figure(figsize=(6, 4), dpi=100)
+        self.figure.patch.set_facecolor('grey')
         self.ax = self.figure.add_subplot()
         self.__active_hist = ''
 
@@ -32,6 +33,7 @@ class Data_Manager:
 
     def histogram(self, col, density):
         self.ax.clear()
+        self.ax.patch.set_facecolor('black')
         if col == -99:
             col = self.__active_hist
         if col in self.get_nominal_cols():
@@ -59,6 +61,7 @@ class Data_Manager:
     def bar_graph(self, bar, height, val):
         h_val = []
         self.ax.clear()
+        self.ax.patch.set_facecolor('black')
         df = self.data
         cols = df[bar].unique().tolist()
         match val:

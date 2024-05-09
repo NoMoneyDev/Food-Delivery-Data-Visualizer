@@ -13,6 +13,7 @@ import sv_ttk
 class UI:
     def __init__(self, root):
         self.root = root
+        self.root.state('zoomed')
         sv_ttk.set_theme("dark", root=self.root)
         self.root.title("Food Delivery Data Visualizer")
         self.create_style()
@@ -38,9 +39,9 @@ class UI:
         self.component_install()
 
         # Defualt tab
-        # No matter how much I tried, I cannot make the default button text yellow on launch. I do not know why so, it is what it is.
+        # No matter how much I tried, I cannot make the default button text yellow on launch. I do not know why, so it is what it is.
         self.current_tab = self.bar_tab
-        self.change_tab('bar')
+        self.change_tab('data')
 
     def config_grid(self):
         self.menu_frame.columnconfigure((0,1,2,3,4), weight=1, uniform=True)
@@ -128,32 +129,67 @@ class Data_Tab(New_Tab):
         self.set_table_col()
         self.insert_data()
         self.filter_text = ttk.Label(self.filters_frame, text="Filters")
+
         self.quantity_filter_text = ttk.Label(self.filters_frame, text="Quantity of Items")
         self.quantity_filter_var = tk.StringVar(self.filters_frame, "1-7, 5")
         self.quantity_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.quantity_filter_var)
 
-    def component_install(self):
-        self.table.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.table_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.cost_filter_text = ttk.Label(self.filters_frame, text="Cost")
+        self.cost_filter_var = tk.StringVar(self.filters_frame, "1-7, 5")
+        self.cost_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.cost_filter_var)
 
-        self.filter_text.grid(column=0, row=0, sticky=tk.W)
-        self.quantity_filter_text.grid(column=0, row=1, sticky=tk.SW)
-        self.quantity_filter_entry.grid(column=0, row=2, sticky=tk.NW)
-        self.filters_frame.grid(padx=10, column=1, row=0, sticky=tk.NSEW)
+        self.payment_filter_text = ttk.Label(self.filters_frame, text="Payment mode")
+        self.payment_filter_var = tk.StringVar(self.filters_frame, "Debit Card,Cash")
+        self.payment_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.payment_filter_var)
+
+        self.food_rate_filter_text = ttk.Label(self.filters_frame, text="Food Rating")
+        self.food_rate_filter_var = tk.StringVar(self.filters_frame, "1-3, 5")
+        self.food_rate_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.food_rate_filter_var)
+
+        self.deli_rate_filter_text = ttk.Label(self.filters_frame, text="Delivery Rating")
+        self.deli_rate_filter_var = tk.StringVar(self.filters_frame, "1-3, 5")
+        self.deli_rate_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.deli_rate_filter_var)
+
+    def component_install(self):
+        self.table.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.table_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+
+        self.filter_text.grid(column=1, row=0, sticky=tk.W)
+
+        self.quantity_filter_text.grid(column=1, row=1, sticky=tk.SW)
+        self.quantity_filter_entry.grid(column=1, row=2, sticky=tk.NW)
+
+        self.cost_filter_text.grid(column=2, row=1, sticky=tk.S)
+        self.cost_filter_entry.grid(column=2, row=2, sticky=tk.N)
+
+        self.payment_filter_text.grid(column=3, row=1, sticky=tk.S)
+        self.payment_filter_entry.grid(column=3, row=2, sticky=tk.N)
+
+        self.food_rate_filter_text.grid(column=1, row=4, sticky=tk.S)
+        self.food_rate_filter_entry.grid(column=1, row=5, sticky=tk.N)
+
+        self.deli_rate_filter_text.grid(column=2, row=4, sticky=tk.S)
+        self.deli_rate_filter_entry.grid(column=2, row=5, sticky=tk.N)
+
+        self.filters_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
 
     def table_col_config(self):
-        for col_num in range(len(self.data.get_cols())):
-            self.table.column('#'+str(col_num+1), minwidth = 65, width=150,  stretch=True)
+        for i,col in enumerate(self.data.get_cols()):
+            self.table.heading('#'+str(i), text=col)
+
+        self.table.column('#0', minwidth=0, stretch=True)
+
+        for col_num in range(2,len(self.data.get_cols())):
+            self.table.column('#'+str(col_num), minwidth=0, width=150, stretch=False)
+
 
     def grid_config(self):
-        self.columnconfigure(0)
-        self.columnconfigure(1)
-
-        self.rowconfigure(0,weight=1)
-
         self.filters_frame.columnconfigure(0, weight=1, uniform=True)
         self.filters_frame.columnconfigure(1, weight=1, uniform=True)
         self.filters_frame.columnconfigure(2, weight=1, uniform=True)
+        self.filters_frame.columnconfigure(3, weight=1, uniform=True)
+        self.filters_frame.columnconfigure(4, weight=1, uniform=True)
 
         self.filters_frame.rowconfigure(0, weight=1, uniform=True)
         self.filters_frame.rowconfigure(1, weight=1, uniform=True)
