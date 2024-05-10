@@ -36,6 +36,7 @@ class UI:
         self.data_tab = Data_Tab(self.root)
         self.bar_tab = Bar_Tab(self.root)
         self.hist_tab = Hist_Tab(self.root)
+        self.story_tab = Story_Tab(self.root)
 
         self.config_grid()
         self.component_install()
@@ -72,9 +73,8 @@ class UI:
                 self.bar_tab_button.configure(bg='Yellow', fg='Black')
                 self.current_tab = self.bar_tab
             case 'story':
-                pass
-            case _:
-                pass
+                self.story_tab_button.configure(bg='Yellow', fg='Black')
+                self.current_tab = self.story_tab
         self.current_tab.pack_tab()
 
     def reset_menu_color(self):
@@ -493,6 +493,33 @@ class Bar_Tab(New_Tab):
     def handle_graph(self, *args):
         self.data.bar_graph(self.bar_config_combobox.get(), self.height_config_combobox.get(), self.values_config_combobox.get())
         self.graph_img.draw()
+
+
+class Story_Tab(New_Tab):
+    def __init__(self, root):
+        super().__init__(root)
+
+    def component_init(self):
+        self.graph_frame = tk.Frame(self)
+        self.graph_img = tk.Canvas(self.graph_frame)
+
+        self.correl_frame = tk.Frame(self)
+        self.correl_img = tk.Canvas(self.correl_frame)
+
+        self.desc_frame = tk.Frame(self)
+        self.description = tk.Label(self.desc_frame, text='', fg='white')
+
+    def component_install(self):
+        self.graph_img.pack(fill=tk.BOTH, expand=True)
+        self.graph_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.correl_img.pack(fill=tk.BOTH, expand=True)
+        self.correl_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        self.description.pack(fill=tk.BOTH, expand=True)
+        self.desc_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
 
 
 
