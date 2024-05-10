@@ -31,13 +31,14 @@ class UI:
         self.hist_tab_button = tk.Button(self.menu_frame, text='Histogram', command=lambda: self.change_tab('hist'))
         self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph', command=lambda: self.change_tab('bar'))
         self.story_tab_button = tk.Button(self.menu_frame, text='Story', command=lambda: self.change_tab('story'))
+        self.descriptive_tab_button = tk.Button(self.menu_frame, text='Descriptive', command=lambda: self.change_tab('desc'))
         self.quit_button = tk.Button(self.menu_frame, text='Quit', command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
         self.bar_tab = Bar_Tab(self.root)
         self.hist_tab = Hist_Tab(self.root)
         self.story_tab = Story_Tab(self.root)
-
+        self.descriptive_tab = Descriptive_Tab(self.root)
         self.config_grid()
         self.component_install()
 
@@ -47,17 +48,18 @@ class UI:
         self.change_tab('data')
 
     def config_grid(self):
-        self.menu_frame.columnconfigure((0,1,2,3,4), weight=1, uniform=True)
-        self.menu_frame.rowconfigure(0, weight=1, uniform=True)
+        self.menu_frame.columnconfigure((0,1,2,3,4,5), weight=1, uniform=True)
+        self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=30)
 
     def component_install(self):
         self.data_tab_button.grid(column=0, row=0, sticky=tk.NSEW)
         self.hist_tab_button.grid(column=1, row=0, sticky=tk.NSEW)
         self.bar_tab_button.grid(column=2, row=0, sticky=tk.NSEW)
         self.story_tab_button.grid(column=3, row=0, sticky=tk.NSEW)
-        self.quit_button.grid(column=4, row=0, sticky=tk.NSEW)
+        self.descriptive_tab_button.grid(column=4, row=0, sticky=tk.NSEW)
+        self.quit_button.grid(column=5, row=0, sticky=tk.NSEW)
 
-        self.menu_frame.pack(side=tk.TOP, fill=tk.X)
+        self.menu_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
     def change_tab(self, tab):
         self.reset_menu_color()
@@ -75,6 +77,9 @@ class UI:
             case 'story':
                 self.story_tab_button.configure(bg='Yellow', fg='Black')
                 self.current_tab = self.story_tab
+            case 'desc':
+                self.descriptive_tab_button.configure(bg='Yellow', fg='Black')
+                self.current_tab = self.descriptive_tab
         self.current_tab.pack_tab()
 
     def reset_menu_color(self):
@@ -82,6 +87,7 @@ class UI:
         self.hist_tab_button.config(bg='Black', fg='White')
         self.bar_tab_button.config(bg='Black', fg='White')
         self.story_tab_button.config(bg='Black', fg='White')
+        self.descriptive_tab_button.config(bg='Black', fg='White')
         self.quit_button.config(bg='Black', fg='White')
 
     @property
@@ -520,7 +526,15 @@ class Story_Tab(New_Tab):
         self.desc_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
+class Descriptive_Tab(New_Tab):
+    def __init__(self, root):
+        super().__init__(root)
 
+    def component_init(self):
+        pass
+
+    def component_install(self):
+        pass
 
 
 if __name__ == '__main__':
