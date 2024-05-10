@@ -100,7 +100,7 @@ class UI:
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
-        self.font = ('Arial', 18)
+        self.font = ('Arial', 12)
         super().__init__(root)
         self.data = Data_Manager()
         self.component_init()
@@ -217,9 +217,9 @@ class Data_Tab(New_Tab):
         self.filters_frame.columnconfigure(3, weight=1, uniform=True)
         self.filters_frame.columnconfigure(4, weight=1, uniform=True)
 
-        self.filters_frame.rowconfigure(0, weight=1, uniform=True)
-        self.filters_frame.rowconfigure(1, weight=1, uniform=True)
-        self.filters_frame.rowconfigure(2, weight=1, uniform=True)
+        self.filters_frame.rowconfigure(0, weight=1)
+        self.filters_frame.rowconfigure(1, weight=1)
+        self.filters_frame.rowconfigure(2, weight=1)
         self.filters_frame.rowconfigure(3, weight=1, uniform=True)
         self.filters_frame.rowconfigure(4, weight=1, uniform=True)
         self.filters_frame.rowconfigure(5, weight=1, uniform=True)
@@ -326,7 +326,6 @@ class Data_Tab(New_Tab):
         return event.widget.master.winfo_children()[0]
 
     def refresh_data(self):
-        print(self.active_filter)
         new_data = self.data.filter_data(self.active_filter)
         self.clear_data()
 
