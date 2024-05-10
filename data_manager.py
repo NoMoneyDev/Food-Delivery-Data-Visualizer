@@ -31,6 +31,31 @@ class Data_Manager:
             returnlist += [list(row)[1:]]
         return returnlist
 
+    def to_row(self, data):
+        returnlist = []
+        for row in data.itertuples():
+            returnlist += [list(row)[1:]]
+        return returnlist
+
+    def clear_data(self):
+        self.__data = pd.DataFrame(columns=self.data.columns)
+
+    def filter_data(self, filters):
+        df = self.data.copy()
+        for col,fil in filters.items():
+            filter = fil[0]
+            mode = fil[1]
+            match mode:
+                case 'exact':
+                    pass
+                case 'multexact':
+                    pass
+                case 'range':
+                    df = df[(filter1 <= self.data[col]) & (self.data[col] <= filter2)]
+
+        return self.to_row(df)
+
+
     def histogram(self, col, density):
         self.ax.clear()
         self.ax.patch.set_facecolor('black')

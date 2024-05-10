@@ -1,6 +1,7 @@
 import abc
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import matplotlib as plt
 import seaborn as sns
 from abc import abstractmethod
@@ -98,6 +99,7 @@ class UI:
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
+        self.font = ('Arial', 18)
         super().__init__(root)
         self.data = Data_Manager()
         self.component_init()
@@ -130,25 +132,39 @@ class Data_Tab(New_Tab):
         self.insert_data()
         self.filter_text = ttk.Label(self.filters_frame, text="Filters")
 
-        self.quantity_filter_text = ttk.Label(self.filters_frame, text="Quantity of Items")
-        self.quantity_filter_var = tk.StringVar(self.filters_frame, "1-7, 5")
-        self.quantity_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.quantity_filter_var)
+        self.quantity_frame = tk.Frame(self.filters_frame)
+        self.quantity_filter_text = tk.Label(self.quantity_frame, text="Quantity of Items", font=self.font)
+        self.quantity_filter_var = tk.StringVar(self.quantity_frame, "1-7, 5")
+        self.quantity_filter_entry = ttk.Entry(self.quantity_frame, textvariable=self.quantity_filter_var)
+        self.quantity_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Quantity of Items', self.quantity_filter_var.get()))
 
-        self.cost_filter_text = ttk.Label(self.filters_frame, text="Cost")
-        self.cost_filter_var = tk.StringVar(self.filters_frame, "1-7, 5")
-        self.cost_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.cost_filter_var)
+        self.cost_frame = tk.Frame(self.filters_frame)
+        self.cost_filter_text = tk.Label(self.cost_frame, text="Cost", font=self.font)
+        self.cost_filter_var = tk.StringVar(self.cost_frame, "100-700")
+        self.cost_filter_entry = ttk.Entry(self.cost_frame, textvariable=self.cost_filter_var)
+        self.cost_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Cost', self.cost_filter_var.get()))
 
-        self.payment_filter_text = ttk.Label(self.filters_frame, text="Payment mode")
-        self.payment_filter_var = tk.StringVar(self.filters_frame, "Debit Card,Cash")
-        self.payment_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.payment_filter_var)
+        self.payment_frame = tk.Frame(self.filters_frame)
+        self.payment_filter_text = tk.Label(self.payment_frame, text="Payment mode", font=self.font)
+        self.payment_filter_listbox = tk.Listbox(self.payment_frame, selectmode=tk.MULTIPLE, height=3, selectbackground='grey', relief=tk.FLAT, highlightcolor='black')
+        self.payment_filter_listbox.insert(tk.END, 'Cash','Credit Card','Debit Card')
+        self.payment_filter_listbox.bind('<ButtonPress-1>', lambda ev: self.handle_payment())
 
-        self.food_rate_filter_text = ttk.Label(self.filters_frame, text="Food Rating")
-        self.food_rate_filter_var = tk.StringVar(self.filters_frame, "1-3, 5")
-        self.food_rate_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.food_rate_filter_var)
+        self.food_rate_frame = tk.Frame(self.filters_frame)
+        self.food_rate_filter_text = tk.Label(self.food_rate_frame, text="Food Rating", font=self.font)
+        self.food_rate_filter_var = tk.StringVar(self.food_rate_frame, "1-3, 5")
+        self.food_rate_filter_entry = ttk.Entry(self.food_rate_frame, textvariable=self.food_rate_filter_var)
+        self.food_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Food Rating', self.food_rate_filter_var.get()))
 
-        self.deli_rate_filter_text = ttk.Label(self.filters_frame, text="Delivery Rating")
-        self.deli_rate_filter_var = tk.StringVar(self.filters_frame, "1-3, 5")
-        self.deli_rate_filter_entry = ttk.Entry(self.filters_frame, textvariable=self.deli_rate_filter_var)
+        self.deli_rate_frame = tk.Frame(self.filters_frame)
+        self.deli_rate_filter_text = tk.Label(self.deli_rate_frame, text="Delivery Rating", font=self.font)
+        self.deli_rate_filter_var = tk.StringVar(self.deli_rate_frame, "1-3, 5")
+        self.deli_rate_filter_entry = ttk.Entry(self.deli_rate_frame, textvariable=self.deli_rate_filter_var)
+        self.deli_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Delivery Rating', self.deli_rate_filter_var.get()))
+
+        self.active_filter = {}
+        for col in self.data.get_cols():
+            self.active_filter[col] = ''
 
     def component_install(self):
         self.table.pack(side=tk.LEFT, fill=tk.BOTH)
@@ -156,20 +172,25 @@ class Data_Tab(New_Tab):
 
         self.filter_text.grid(column=1, row=0, sticky=tk.W)
 
-        self.quantity_filter_text.grid(column=1, row=1, sticky=tk.SW)
-        self.quantity_filter_entry.grid(column=1, row=2, sticky=tk.NW)
+        self.quantity_frame.grid(column=1, row=1)
+        self.quantity_filter_text.pack()
+        self.quantity_filter_entry.pack()
 
-        self.cost_filter_text.grid(column=2, row=1, sticky=tk.S)
-        self.cost_filter_entry.grid(column=2, row=2, sticky=tk.N)
+        self.cost_frame.grid(column=2, row=1)
+        self.cost_filter_text.pack()
+        self.cost_filter_entry.pack()
 
-        self.payment_filter_text.grid(column=3, row=1, sticky=tk.S)
-        self.payment_filter_entry.grid(column=3, row=2, sticky=tk.N)
+        self.payment_frame.grid(column=3, row=1)
+        self.payment_filter_text.pack()
+        self.payment_filter_listbox.pack()
 
-        self.food_rate_filter_text.grid(column=1, row=4, sticky=tk.S)
-        self.food_rate_filter_entry.grid(column=1, row=5, sticky=tk.N)
+        self.food_rate_frame.grid(column=1, row=2)
+        self.food_rate_filter_text.pack()
+        self.food_rate_filter_entry.pack()
 
-        self.deli_rate_filter_text.grid(column=2, row=4, sticky=tk.S)
-        self.deli_rate_filter_entry.grid(column=2, row=5, sticky=tk.N)
+        self.deli_rate_frame.grid(column=2, row=2)
+        self.deli_rate_filter_text.pack()
+        self.deli_rate_filter_entry.pack()
 
         self.filters_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
@@ -211,9 +232,90 @@ class Data_Tab(New_Tab):
         for row in self.data.get_rows():
             self.table.insert('', tk.END, values=row)
 
-    def unpack(self):
-        self.pack_forget()
+    def clear_data(self):
+        self.table.delete(*self.table.get_children())
+        self.data.clear_data()
 
+    def reset_filter(self, event):
+        label = self.get_filter_label(event)
+        label.config(fg='white')
+
+        match label:
+            case self.quantity_filter_text:
+                self.quantity_filter_var.set('1-7, 5')
+
+            case self.cost_filter_text:
+                self.cost_filter_var.set(100-700)
+
+            case self.food_rate_filter_text:
+                self.food_rate_filter_var.set('1-3, 5')
+
+            case self.deli_rate_filter_text:
+                self.deli_rate_filter_var.set('1-3, 5')
+
+    def handle_payment(self):
+        '''selecting something is like crossing it out'''
+        filter = ['Cash', 'Credit Card', 'Debit Card']
+        listbox = self.payment_filter_listbox
+        for i in listbox.curselection():
+            filter.remove(listbox.get(i))
+
+        match len(filter):
+            case 3:
+                self.active_filter['Payment mode'] = [','.join(filter), 'multexact']
+            case 2:
+                self.active_filter['Payment mode'] = [','.join(filter), 'multexact']
+            case 1:
+                self.active_filter['Payment mode'] = [filter[0], 'exact']
+            case 0:
+                self.active_filter['Payment mode'] = ['', 'exact']
+                self.payment_filter_text.config(fg='white')
+                return
+
+        self.payment_filter_text.config(fg='yellow')
+
+    def handle_filter(self, event, col, filter):
+        if filter == '':
+            self.reset_filter(event)
+            self.active_filter[col] = ''
+            return
+
+        # Check nominal value filter
+        if col in self.data.get_nominal_cols():
+            if ',' in filter:
+                filters = filter.split(',')
+                valid_cols = self.data[col].unique()
+                if not all(c in valid_cols for c in filters):
+                    messagebox.showerror('INVALID FILTER VALUES', 'Value Error: All values in the filter must be in the data')
+                    return
+                mode = 'multexact'
+            else:
+                if filter not in self.data[col].unique():
+                    messagebox.showerror('INVALID FILTER VALUE', 'Value Error: Filter value must be in the data')
+                    return
+                mode = 'exact'
+
+        # Check numerical value filter (must be integer)
+        elif col in self.data.get_numerical_cols():
+            if '-' in filter:
+                filters = filter.split('-')
+                if not all(c.isdigit() for c in filters):
+                    messagebox.showerror('INVALID FILTER VALUES', 'Type Error: Filter value must be integer')
+                    return
+                mode = 'range'
+            else:
+                if not filter.isdigit():
+                    messagebox.showerror('INVALID FILTER VALUES', 'Type Error: Filter value must be integer')
+                    return
+                filters = filter
+                mode = 'exact'
+
+        self.get_filter_label(event).config(fg='Yellow')
+        self.active_filter[col] = [filter, mode]
+        self.data.filter_data(self.active_filter)
+
+    def get_filter_label(self, event):
+        return event.widget.master.winfo_children()[0]
 
 class Hist_Tab(New_Tab):
     def __init__(self, root):
