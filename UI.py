@@ -9,6 +9,7 @@ from data_manager import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 matplotlib.use('TkAgg')
 import sv_ttk
+import time
 
 
 class UI:
@@ -148,7 +149,7 @@ class Data_Tab(New_Tab):
         self.payment_filter_text = tk.Label(self.payment_frame, text="Payment mode", font=self.font)
         self.payment_filter_listbox = tk.Listbox(self.payment_frame, selectmode=tk.MULTIPLE, height=3, selectbackground='grey', relief=tk.FLAT, highlightcolor='black')
         self.payment_filter_listbox.insert(tk.END, 'Cash','Credit Card','Debit Card')
-        self.payment_filter_listbox.bind('<ButtonPress-1>', lambda ev: self.handle_payment())
+        self.payment_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect())
 
         self.food_rate_frame = tk.Frame(self.filters_frame)
         self.food_rate_filter_text = tk.Label(self.food_rate_frame, text="Food Rating", font=self.font)
@@ -201,8 +202,11 @@ class Data_Tab(New_Tab):
 
         self.table.column('#0', minwidth=0, stretch=True)
 
+        optimal_width = int(self.root.winfo_screenwidth()/18)
+
         for col_num in range(2,len(self.data.get_cols())):
-            self.table.column('#'+str(col_num), minwidth=0, width=150, stretch=False)
+            self.table.column('#'+str(col_num), minwidth=0, width=optimal_width, stretch=False)
+
 
 
     def grid_config(self):
@@ -234,7 +238,6 @@ class Data_Tab(New_Tab):
 
     def clear_data(self):
         self.table.delete(*self.table.get_children())
-        self.data.clear_data()
 
     def reset_filter(self, event):
         label = self.get_filter_label(event)
@@ -245,7 +248,7 @@ class Data_Tab(New_Tab):
                 self.quantity_filter_var.set('1-7, 5')
 
             case self.cost_filter_text:
-                self.cost_filter_var.set(100-700)
+                self.cost_filter_var.set('100-700')
 
             case self.food_rate_filter_text:
                 self.food_rate_filter_var.set('1-3, 5')
@@ -253,31 +256,35 @@ class Data_Tab(New_Tab):
             case self.deli_rate_filter_text:
                 self.deli_rate_filter_var.set('1-3, 5')
 
+    def check_deselect(self):
+        self.root.after(5, self.handle_payment)
+
     def handle_payment(self):
-        '''selecting something is like crossing it out'''
-        filter = ['Cash', 'Credit Card', 'Debit Card']
+        filter = []
         listbox = self.payment_filter_listbox
         for i in listbox.curselection():
-            filter.remove(listbox.get(i))
-
+            filter.append(listbox.get(i))
         match len(filter):
             case 3:
-                self.active_filter['Payment mode'] = [','.join(filter), 'multexact']
+                self.active_filter['Payment Mode'] = [','.join(filter), 'multexact']
             case 2:
-                self.active_filter['Payment mode'] = [','.join(filter), 'multexact']
+                self.active_filter['Payment Mode'] = [','.join(filter), 'multexact']
             case 1:
-                self.active_filter['Payment mode'] = [filter[0], 'exact']
+                self.active_filter['Payment Mode'] = [filter[0], 'exact']
             case 0:
-                self.active_filter['Payment mode'] = ['', 'exact']
+                self.active_filter['Payment Mode'] = ['Cash,Credit Card,Debit Card', 'multexact']
                 self.payment_filter_text.config(fg='white')
+                self.refresh_data()
                 return
 
         self.payment_filter_text.config(fg='yellow')
+        self.refresh_data()
 
     def handle_filter(self, event, col, filter):
         if filter == '':
             self.reset_filter(event)
             self.active_filter[col] = ''
+            self.refresh_data()
             return
 
         # Check nominal value filter
@@ -312,10 +319,19 @@ class Data_Tab(New_Tab):
 
         self.get_filter_label(event).config(fg='Yellow')
         self.active_filter[col] = [filter, mode]
-        self.data.filter_data(self.active_filter)
+        self.refresh_data()
 
     def get_filter_label(self, event):
         return event.widget.master.winfo_children()[0]
+
+    def refresh_data(self):
+        print(self.active_filter)
+        new_data = self.data.filter_data(self.active_filter)
+        self.clear_data()
+
+        for row in new_data:
+            self.table.insert('', tk.END, values=row)
+
 
 class Hist_Tab(New_Tab):
     def __init__(self, root):

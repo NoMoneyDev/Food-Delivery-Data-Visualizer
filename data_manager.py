@@ -37,20 +37,25 @@ class Data_Manager:
             returnlist += [list(row)[1:]]
         return returnlist
 
-    def clear_data(self):
-        self.__data = pd.DataFrame(columns=self.data.columns)
-
     def filter_data(self, filters):
         df = self.data.copy()
         for col,fil in filters.items():
-            filter = fil[0]
-            mode = fil[1]
+            if fil == '':
+                continue
+            filter: str = fil[0]
+            mode: str = fil[1]
             match mode:
                 case 'exact':
-                    pass
+                    if filter.isdigit():
+                        filter = int(filter)
+                    df = df[self.data[col] == filter]
                 case 'multexact':
-                    pass
+                    filters = filter.split(',')
+                    df = df[self.data[col].isin(filters)]
                 case 'range':
+                    filter1,filter2 = filter.split('-')
+                    filter1 = int(filter1)
+                    filter2 = int(filter2)
                     df = df[(filter1 <= self.data[col]) & (self.data[col] <= filter2)]
 
         return self.to_row(df)
