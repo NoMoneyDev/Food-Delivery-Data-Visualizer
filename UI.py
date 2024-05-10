@@ -10,6 +10,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 matplotlib.use('TkAgg')
 import sv_ttk
 import time
+import os
+from PIL import Image, ImageTk
 
 
 class UI:
@@ -507,22 +509,28 @@ class Story_Tab(New_Tab):
 
     def component_init(self):
         self.graph_frame = tk.Frame(self)
-        self.graph_img = tk.Canvas(self.graph_frame)
+        path = os.getcwd()
+        img_name = 'Scatter plot of Quantity of items and Cost.png'
+        img_path = os.path.join(path, 'img')
+        img = os.path.abspath(os.path.join(img_path,img_name))
+        img = 'img/Scatter plot of Quantity of items and Cost.png'
+
+        self.graph_img = tk.PhotoImage(master=self.graph_frame, file=img)
 
         self.correl_frame = tk.Frame(self)
-        self.correl_img = tk.Canvas(self.correl_frame)
+        self.correl_img = tk.Label(self.graph_frame, image=img)
 
         self.desc_frame = tk.Frame(self)
         self.description = tk.Label(self.desc_frame, text='', fg='white')
 
     def component_install(self):
-        self.graph_img.pack(fill=tk.BOTH, expand=True)
+        self.graph_img.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.graph_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.correl_img.pack(fill=tk.BOTH, expand=True)
         self.correl_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.description.pack(fill=tk.BOTH, expand=True)
+        self.description.pack(fill=tk.BOTH)
         self.desc_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
