@@ -108,3 +108,14 @@ class Data_Manager:
         self.ax.set_xlabel(bar)
         self.ax.set_ylabel(height)
 
+    def descriptive(self, col):
+        df = self.data[col]
+        count = df.count()
+        mean = df.mean()
+        std = df.std()
+        min = df.min()
+        max = df.max()
+        q1 = df.quantile(0.25)
+        q3 = df.quantile(0.75)
+        iqr = q3-q1
+        return count,mean,std,min,max,q1,q3,iqr

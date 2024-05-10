@@ -509,40 +509,81 @@ class Story_Tab(New_Tab):
 
     def component_init(self):
         self.graph_frame = tk.Frame(self)
-        path = os.getcwd()
-        img_name = 'Scatter plot of Quantity of items and Cost.png'
-        img_path = os.path.join(path, 'img')
-        img = os.path.abspath(os.path.join(img_path,img_name))
-        img = 'img/Scatter plot of Quantity of items and Cost.png'
 
-        self.graph_img = tk.PhotoImage(master=self.graph_frame, file=img)
+        sct_img = self.create_image('scatter.png')
+        self.graph_img = tk.Label(self.graph_frame, image=sct_img)
+        self.graph_img.image = sct_img
 
-        self.correl_frame = tk.Frame(self)
-        self.correl_img = tk.Label(self.graph_frame, image=img)
+        sct_img2 = self.create_image('scatter2.png')
+        self.graph_img2 = tk.Label(self.graph_frame, image=sct_img2)
+        self.graph_img2.image = sct_img2
+
+        description = ('The correlation coefficient of Quantity of Items and Cost are 0.7009\n'
+                       'This means that the higher the quantity of items are, the higher cost the order will be.\n'
+                       'The reverse holds true as well, The higher the cost of an order is, the more quantity of items there will be.')
 
         self.desc_frame = tk.Frame(self)
-        self.description = tk.Label(self.desc_frame, text='', fg='white')
+        self.description = tk.Label(self.desc_frame, text=description, fg='white', font=('Arial',14))
 
     def component_install(self):
-        self.graph_img.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.graph_img.pack(fill=tk.BOTH)
+        self.graph_img2.pack(fill=tk.BOTH)
         self.graph_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.correl_img.pack(fill=tk.BOTH, expand=True)
-        self.correl_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.description.pack(fill=tk.BOTH, expand=True)
+        self.desc_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        self.description.pack(fill=tk.BOTH)
-        self.desc_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    def create_image(self, img_name):
+        path = os.path.join(os.getcwd(), 'img', img_name)
+        img = Image.open(path)
+        return ImageTk.PhotoImage(img)
 
 
 class Descriptive_Tab(New_Tab):
     def __init__(self, root):
         super().__init__(root)
+        self.combobox_style = ttk.Style()
+        self.combobox_style.map('TCombobox', highlightcolor=[('focus', 'black'),
+                                                                  ('!focus', 'black')])
 
     def component_init(self):
-        pass
+        self.attribute_var = tk.StringVar()
+        self.attribute_select = ttk.Combobox(self, textvariable=self.attribute_var, values=self.data.get_numerical_cols(), state='readonly')
+        self.attribute_select.current(0)
+        self.attribute_select.bind('<<ComboboxSelected>>', self.handle_combobox)
+
+        self.stat_var = tk.StringVar()
+        self.stat_label = tk.Label(self, font=('Arial',14), textvariable=self.stat_var)
+
+        self.grid_config()
+
+        self.handle_combobox()
 
     def component_install(self):
-        pass
+        self.attribute_select.grid(column=0, row=0, sticky=tk.S)
+        self.stat_label.grid(column=0, row=1, sticky=tk.N)
+
+    def grid_config(self):
+        self.columnconfigure(0, weight=1, uniform=True)
+
+        self.rowconfigure(0, weight=2, uniform=True)
+        self.rowconfigure(1, weight=3, uniform=True)
+
+    def handle_combobox(self, *args):
+        col = self.attribute_var.get()
+        stat = self.data.descriptive(col)
+        self.stat_var.set( ('Count : {}\n'
+                            'Mean : {}\n'
+                            'Std : {}\n'
+                            'Min : {}\n'
+                            'Max : {}\n'
+                            'Q1 : {}\n'
+                            'Q3 : {}\n'
+                            'IQR : {}\n').format(*stat))
+        current = self.attribute_select.current()
+        self.attribute_select.current(0)
+        self.attribute_select.current(current)
+
 
 
 if __name__ == '__main__':
