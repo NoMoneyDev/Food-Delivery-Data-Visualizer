@@ -125,7 +125,8 @@ class Data_Tab(New_Tab):
         self.grid_config()
 
     def component_init(self):
-        self.table_frame = ttk.Frame(self)
+        scrnwidth = self.root.winfo_screenwidth()
+        self.table_frame = ttk.Frame(self, width=scrnwidth*0.55)
         self.filters_frame = ttk.Frame(self)
         self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(), displaycolumns="#all", show="headings")
         self.table_col_config()
@@ -168,7 +169,7 @@ class Data_Tab(New_Tab):
             self.active_filter[col] = ''
 
     def component_install(self):
-        self.table.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.table.pack(side=tk.LEFT, fill=tk.Y)
         self.table_frame.pack(side=tk.LEFT, fill=tk.BOTH)
 
         self.filter_text.grid(column=1, row=0, sticky=tk.W)
