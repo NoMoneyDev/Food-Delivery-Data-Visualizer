@@ -52,7 +52,7 @@ class UI:
         self.config_grid()
         self.component_install()
 
-        # Defualt tab
+        # Default tab
         # No matter how much I tried, I cannot make the default button text yellow on launch.
         # I do not know why, so it is what it is.
         self.current_tab = self.bar_tab
@@ -253,7 +253,7 @@ class Data_Tab(New_Tab):
 
         self.filter_text.grid(column=1, row=0, sticky=tk.W)
 
-        self.quantity_frame.grid(column=1, row=1, padx=20)
+        self.quantity_frame.grid(column=1, row=1)
         self.quantity_filter_text.pack()
         self.quantity_filter_entry.pack()
 
