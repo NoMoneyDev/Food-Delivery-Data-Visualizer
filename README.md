@@ -2,7 +2,7 @@
 
 ---
 
-## Main Features
+## Main Features✔️
 
 Food Data Visualizer was made to help user visualize and analyze people's behavior when choosing and ordering food.<br>
 This program lets user be able to : <br>
@@ -16,14 +16,14 @@ This program lets user be able to : <br>
 
 ---
 
-## System Requirements
+## System Requirements⚙️
 
 * Python >= 3.12
 * Other packages in requirement.txt
 
 ---
 
-## Data Source
+## Data Sourceℹ️
 
 [Restaurant Order Details](https://www.kaggle.com/datasets/mohamedharris/restaurant-order-details)
 
@@ -31,7 +31,7 @@ This program lets user be able to : <br>
 
 ---
 
-## Screenshots
+## Screenshots📸
 
 ### Data Tab
 ![data tab](screenshots/data.png)
@@ -47,7 +47,7 @@ This program lets user be able to : <br>
 
 ---
 
-## Installation
+## Installation🔧
 
 a. Install git [here](https://git-scm.com/downloads) if you haven't
 
@@ -92,7 +92,7 @@ python main.py
 
 ---
 
-## Files
+## Files🗃️
 
 | File Name       | Description                                            |
 |-----------------|--------------------------------------------------------|
@@ -105,7 +105,7 @@ python main.py
 
 ---
 
-## Diagrams
+## Diagrams📌
 
 ### Class Diagram
 
@@ -117,7 +117,7 @@ python main.py
 
 ---
 
-## Disclaimer
+## Disclaimer🚨
 
 The names of the restaurants used are only for representational purposes.<br>
 They do not represent any real life nouns, but are only fictional.
