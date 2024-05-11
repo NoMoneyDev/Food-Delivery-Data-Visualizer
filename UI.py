@@ -657,7 +657,7 @@ class Story_Tab(New_Tab):
         self.graph_img2.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         self.graph_frame.grid(column=1, row=0, padx=50, pady=50)
 
-        self.correl_img.grid(sticky=tk.SE)
+        self.correl_img.grid(sticky=tk.EW)
         self.description.grid(sticky=tk.NE)
         self.desc_frame.grid(column=2, row=0)
 
