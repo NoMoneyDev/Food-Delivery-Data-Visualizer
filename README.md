@@ -12,6 +12,8 @@ This program lets user be able to : <br>
 4. See an example data story
 5. Analyze descriptive statistics
 
+[Video Showcase](https://drive.google.com/file/d/1bwQy6sm1df8CotGdv9zmI7uRFrgoxnEO/view?usp=sharing)
+
 ---
 
 ## System Requirements
@@ -70,7 +72,7 @@ python -m venv env
 
 4. Activate the virtual environment
 
-For window:
+For Windows:
 ```
 .\env\Scripts\activate
 ```

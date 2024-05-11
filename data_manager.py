@@ -48,10 +48,12 @@ class Data_Manager:
                 case 'exact':
                     if filter.isdigit():
                         filter = int(filter)
-                    df = df[self.data[col] == filter]
+                    _df = self.data[col] == filter
+                    df = df[_df]
                 case 'multexact':
                     filters = filter.split(',')
-                    df = df[self.data[col].isin(filters)]
+                    _df = self.data[col].isin(filters)
+                    df = df[_df]
                 case 'range':
                     filter1,filter2 = filter.split('-')
                     filter1 = int(filter1)
@@ -60,6 +62,8 @@ class Data_Manager:
 
         return self.to_row(df)
 
+    def get_unique_val(self, col):
+        return self.data[col].unique().tolist()
 
     def histogram(self, col, density):
         self.ax.clear()

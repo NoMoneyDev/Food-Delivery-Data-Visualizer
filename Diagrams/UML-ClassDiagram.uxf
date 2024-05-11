@@ -99,7 +99,7 @@ insert_data()
 clear_data()
 reset_filter(event: tk.event)
 check_deselect()
-handle_payment()
+handle_listbox()
 handle_filter(event: tk.event, col: str, filter:str)
 get_filter_label()
 refresh_data()
@@ -277,7 +277,7 @@ reset_button_color()
       <x>826</x>
       <y>343</y>
       <w>147</w>
-      <h>189</h>
+      <h>196</h>
     </coordinates>
     <panel_attributes>Data_Manager
 --
@@ -296,7 +296,7 @@ filter_data(filters: dict)
 histogram(col: str, density: bool)
 bar_graph(bar: str, height:str, val: str)
 descriptive(col: str)
-</panel_attributes>
+get_unique_val(col: str)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

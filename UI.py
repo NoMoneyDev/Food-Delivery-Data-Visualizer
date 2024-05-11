@@ -14,7 +14,6 @@ from PIL import Image, ImageTk
 import webbrowser
 
 
-
 class UI:
     def __init__(self, root):
         self.root = root
@@ -30,7 +29,7 @@ class UI:
 
     def create_style(self):
         self.label_font = ttk.Style()
-        self.label_font.configure('TLabel', font=('Arial',18))
+        self.label_font.configure('TLabel', font=('Arial', 18))
 
     def component_init(self):
         self.menu_frame = tk.Frame(self.root)
@@ -38,8 +37,9 @@ class UI:
         self.hist_tab_button = tk.Button(self.menu_frame, text='Histogram', command=lambda: self.change_tab('hist'))
         self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph', command=lambda: self.change_tab('bar'))
         self.story_tab_button = tk.Button(self.menu_frame, text='Story', command=lambda: self.change_tab('story'))
-        self.descriptive_tab_button = tk.Button(self.menu_frame, text='Descriptive', command=lambda: self.change_tab('desc'))
-        self.about_tab_button = tk.Button(self.menu_frame, text='About',command=lambda: self.change_tab('about'))
+        self.descriptive_tab_button = tk.Button(self.menu_frame, text='Descriptive',
+                                                command=lambda: self.change_tab('desc'))
+        self.about_tab_button = tk.Button(self.menu_frame, text='About', command=lambda: self.change_tab('about'))
         self.quit_button = tk.Button(self.menu_frame, text='Quit', command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
@@ -52,13 +52,14 @@ class UI:
         self.component_install()
 
         # Defualt tab
-        # No matter how much I tried, I cannot make the default button text yellow on launch. I do not know why, so it is what it is.
+        # No matter how much I tried, I cannot make the default button text yellow on launch.
+        # I do not know why, so it is what it is.
         self.current_tab = self.bar_tab
         self.change_tab('data')
 
     def config_grid(self):
-        self.menu_frame.columnconfigure((0,1,2,3,4,5,6), weight=1, uniform=True)
-        self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=self.screenheight//48)
+        self.menu_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1, uniform=True)
+        self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=self.screenheight // 48)
 
     def component_install(self):
         self.data_tab_button.grid(column=0, row=0, sticky=tk.NSEW)
@@ -116,7 +117,7 @@ class UI:
         self.root.mainloop()
 
 
-#abstract class for every tabs
+# abstract class for every tabs
 class New_Tab(tk.Frame):
     def __init__(self, root):
         self.root = root
@@ -146,9 +147,10 @@ class Data_Tab(New_Tab):
 
     def component_init(self):
         scrnwidth = self.root.winfo_screenwidth()
-        self.table_frame = ttk.Frame(self, width=scrnwidth*0.55)
+        self.table_frame = ttk.Frame(self, width=scrnwidth * 0.55)
         self.filters_frame = ttk.Frame(self)
-        self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(), displaycolumns="#all", show="headings")
+        self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(), displaycolumns="#all",
+                                  show="headings")
         self.table_col_config()
         self.set_table_col()
         self.insert_data()
@@ -158,7 +160,8 @@ class Data_Tab(New_Tab):
         self.quantity_filter_text = tk.Label(self.quantity_frame, text="Quantity of Items", font=self.font)
         self.quantity_filter_var = tk.StringVar(self.quantity_frame, "1-7, 5")
         self.quantity_filter_entry = ttk.Entry(self.quantity_frame, textvariable=self.quantity_filter_var)
-        self.quantity_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Quantity of Items', self.quantity_filter_var.get()))
+        self.quantity_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Quantity of Items',
+                                                                                  self.quantity_filter_var.get()))
 
         self.cost_frame = tk.Frame(self.filters_frame)
         self.cost_filter_text = tk.Label(self.cost_frame, text="Cost", font=self.font)
@@ -168,21 +171,63 @@ class Data_Tab(New_Tab):
 
         self.payment_frame = tk.Frame(self.filters_frame)
         self.payment_filter_text = tk.Label(self.payment_frame, text="Payment mode", font=self.font)
-        self.payment_filter_listbox = tk.Listbox(self.payment_frame, selectmode=tk.MULTIPLE, height=3, selectbackground='grey', relief=tk.FLAT, highlightcolor='black')
-        self.payment_filter_listbox.insert(tk.END, 'Cash','Credit Card','Debit Card')
-        self.payment_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect())
+        self.payment_filter_listbox = tk.Listbox(self.payment_frame, selectmode=tk.MULTIPLE, height=3,
+                                                 selectbackground='grey', relief=tk.FLAT, highlightcolor='black',
+                                                 exportselection=False)
+        self.payment_filter_listbox.insert(tk.END, 'Cash', 'Credit Card', 'Debit Card')
+        self.payment_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect(ev))
 
         self.food_rate_frame = tk.Frame(self.filters_frame)
         self.food_rate_filter_text = tk.Label(self.food_rate_frame, text="Food Rating", font=self.font)
         self.food_rate_filter_var = tk.StringVar(self.food_rate_frame, "1-3, 5")
         self.food_rate_filter_entry = ttk.Entry(self.food_rate_frame, textvariable=self.food_rate_filter_var)
-        self.food_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Food Rating', self.food_rate_filter_var.get()))
+        self.food_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Food Rating',
+                                                                                   self.food_rate_filter_var.get()))
 
         self.deli_rate_frame = tk.Frame(self.filters_frame)
         self.deli_rate_filter_text = tk.Label(self.deli_rate_frame, text="Delivery Rating", font=self.font)
         self.deli_rate_filter_var = tk.StringVar(self.deli_rate_frame, "1-3, 5")
         self.deli_rate_filter_entry = ttk.Entry(self.deli_rate_frame, textvariable=self.deli_rate_filter_var)
-        self.deli_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Delivery Rating', self.deli_rate_filter_var.get()))
+        self.deli_rate_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Delivery Rating',
+                                                                                   self.deli_rate_filter_var.get()))
+
+        self.zone_frame = tk.Frame(self.filters_frame)
+        self.zone_filter_text = tk.Label(self.zone_frame, text="Zone", font=self.font)
+        self.zone_filter_listbox = tk.Listbox(self.zone_frame, selectmode=tk.MULTIPLE, height=4,
+                                              selectbackground='grey', relief=tk.FLAT, highlightcolor='black',
+                                              exportselection=False)
+        self.zone_filter_listbox.insert(tk.END, 'Zone A', 'Zone B', 'Zone C', 'Zone D')
+        self.zone_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect(ev))
+
+        self.restaurant_frame = tk.Frame(self.filters_frame)
+        self.restaurant_filter_text = tk.Label(self.restaurant_frame, text="Restaurant Name", font=self.font)
+        self.restaurant_filter_var = tk.StringVar()
+        self.restaurant_filter_combobox = ttk.Combobox(self.restaurant_frame,
+                                                       values=['None'] + self.data.get_unique_val('Restaurant Name'),
+                                                       textvariable=self.restaurant_filter_var, state='readonly')
+        self.restaurant_filter_combobox.current(0)
+        self.restaurant_filter_combobox.bind('<<ComboboxSelected>>',
+                                             lambda ev: self.handle_filter(ev, 'Restaurant Name',
+                                                                           self.restaurant_filter_var.get()))
+
+        self.category_frame = tk.Frame(self.filters_frame)
+        self.category_filter_text = tk.Label(self.category_frame, text="Category", font=self.font)
+        self.category_filter_var = tk.StringVar()
+        self.category_filter_combobox = ttk.Combobox(self.category_frame, values=['None', 'Ordinary', 'Pro'],
+                                                     textvariable=self.category_filter_var, state='readonly')
+        self.category_filter_combobox.current(0)
+        self.category_filter_combobox.bind('<<ComboboxSelected>>', lambda ev: self.handle_filter(ev, 'Category',
+                                                                                                 self.category_filter_var.get()))
+
+        self.cuisine_frame = tk.Frame(self.filters_frame)
+        self.cuisine_filter_text = tk.Label(self.cuisine_frame, text="Cuisine", font=self.font)
+        self.cuisine_filter_listbox = tk.Listbox(self.cuisine_frame, selectmode=tk.MULTIPLE, height=4,
+                                                 selectbackground='grey', relief=tk.FLAT, highlightcolor='black',
+                                                 exportselection=False)
+        self.cuisine_filter_listbox.insert(tk.END, 'African', 'Continental', 'Arabian', 'Chinese', 'Belgian', 'French',
+                                           'North Indian', 'South Indian')
+
+        self.cuisine_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect(ev))
 
         self.active_filter = {}
         for col in self.data.get_cols():
@@ -214,21 +259,34 @@ class Data_Tab(New_Tab):
         self.deli_rate_filter_text.pack()
         self.deli_rate_filter_entry.pack()
 
+        self.zone_frame.grid(column=3, row=2)
+        self.zone_filter_text.pack()
+        self.zone_filter_listbox.pack()
+
+        self.restaurant_frame.grid(column=1, row=3)
+        self.restaurant_filter_text.pack()
+        self.restaurant_filter_combobox.pack()
+
+        self.category_frame.grid(column=2, row=3)
+        self.category_filter_text.pack()
+        self.category_filter_combobox.pack()
+
+        self.cuisine_frame.grid(column=3, row=3)
+        self.cuisine_filter_text.pack()
+        self.cuisine_filter_listbox.pack()
+
         self.filters_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-
     def table_col_config(self):
-        for i,col in enumerate(self.data.get_cols()):
-            self.table.heading('#'+str(i), text=col)
+        for i, col in enumerate(self.data.get_cols()):
+            self.table.heading('#' + str(i), text=col)
 
         self.table.column('#0', minwidth=0, stretch=True)
 
-        optimal_width = int(self.root.winfo_screenwidth()/18)
+        optimal_width = int(self.root.winfo_screenwidth() / 18)
 
-        for col_num in range(2,len(self.data.get_cols())):
-            self.table.column('#'+str(col_num), minwidth=0, width=optimal_width, stretch=False)
-
-
+        for col_num in range(2, len(self.data.get_cols())):
+            self.table.column('#' + str(col_num), minwidth=0, width=optimal_width, stretch=False)
 
     def grid_config(self):
         self.filters_frame.columnconfigure(0, weight=1, uniform=True)
@@ -277,32 +335,46 @@ class Data_Tab(New_Tab):
             case self.deli_rate_filter_text:
                 self.deli_rate_filter_var.set('1-3, 5')
 
-    def check_deselect(self):
-        self.root.after(5, self.handle_payment)
+    def check_deselect(self, ev):
+        self.root.after(5, lambda ev=ev: self.handle_listbox(ev))
 
-    def handle_payment(self):
+    def handle_listbox(self, ev):
         filter = []
-        listbox = self.payment_filter_listbox
+        listbox = ev.widget
+
+        match listbox:
+            case self.payment_filter_listbox:
+                col = 'Payment Mode'
+                label = self.payment_filter_text
+            case self.zone_filter_listbox:
+                col = 'Zone'
+                label = self.zone_filter_text
+            case self.cuisine_filter_listbox:
+                col = 'Cuisine'
+                label = self.cuisine_filter_text
+
+        values = self.data.get_unique_val(col)
+
         for i in listbox.curselection():
             filter.append(listbox.get(i))
         match len(filter):
-            case 3:
-                self.active_filter['Payment Mode'] = [','.join(filter), 'multexact']
             case 2:
-                self.active_filter['Payment Mode'] = [','.join(filter), 'multexact']
+                self.active_filter[col] = [','.join(filter), 'multexact']
             case 1:
-                self.active_filter['Payment Mode'] = [filter[0], 'exact']
+                self.active_filter[col] = [filter[0], 'exact']
             case 0:
-                self.active_filter['Payment Mode'] = ['Cash,Credit Card,Debit Card', 'multexact']
-                self.payment_filter_text.config(fg='white')
+                self.active_filter[col] = [','.join(values), 'multexact']
+                label.config(fg='white')
                 self.refresh_data()
                 return
+            case _:
+                self.active_filter[col] = [','.join(filter), 'multexact']
 
-        self.payment_filter_text.config(fg='yellow')
+        label.config(fg='yellow')
         self.refresh_data()
 
     def handle_filter(self, event, col, filter):
-        if filter == '':
+        if filter in ['', 'None']:
             self.reset_filter(event)
             self.active_filter[col] = ''
             self.refresh_data()
@@ -316,13 +388,14 @@ class Data_Tab(New_Tab):
         if col in self.data.get_nominal_cols():
             if ',' in filter:
                 filters = filter.split(',')
-                valid_cols = self.data[col].unique()
+                valid_cols = self.data.get_unique_val(col)
                 if not all(c in valid_cols for c in filters):
-                    messagebox.showerror('INVALID FILTER VALUES', 'Value Error: All values in the filter must be in the data\n')
+                    messagebox.showerror('INVALID FILTER VALUES',
+                                         'Value Error: All values in the filter must be in the data\n')
                     return
                 mode = 'multexact'
             else:
-                if filter not in self.data[col].unique():
+                if filter not in self.data.get_unique_val(col):
                     messagebox.showerror('INVALID FILTER VALUE', 'Value Error: Filter value must be in the data')
                     return
                 mode = 'exact'
@@ -369,18 +442,28 @@ class Hist_Tab(New_Tab):
         self.graph_img = FigureCanvasTkAgg(self.data.figure, master=self.graph_frame)
         NavigationToolbar2Tk(self.graph_img, self)
 
-        self.restaurant_button = tk.Button(self.selection_frame, text="Restaurant Name", bg="Black", command=lambda: self.handle_graph('Restaurant Name'))
-        self.cuisine_button = tk.Button(self.selection_frame, text="Cuisine", bg="Black", command=lambda: self.handle_graph('Cuisine'))
-        self.zone_button = tk.Button(self.selection_frame, text="Zone", bg="Black", command=lambda: self.handle_graph('Zone'))
-        self.category_button = tk.Button(self.selection_frame, text="Category", bg="Black", command=lambda: self.handle_graph('Category'))
-        self.payment_button = tk.Button(self.selection_frame, text="Payment Mode", bg="Black", command=lambda: self.handle_graph('Payment Mode'))
-        self.quantity_button = tk.Button(self.selection_frame, text="Quantity of Items", bg="Black", command=lambda: self.handle_graph('Quantity of Items'))
-        self.delivery_button = tk.Button(self.selection_frame, text="Delivery Time", bg="Black", command=lambda: self.handle_graph('Delivery Time'))
-        self.food_rate_button = tk.Button(self.selection_frame, text="Food Rating", bg="Black", command=lambda: self.handle_graph('Food Rating'))
-        self.deli_rate_button = tk.Button(self.selection_frame, text="Delivery Rating", bg="Black", command=lambda: self.handle_graph('Delivery Rating'))
+        self.restaurant_button = tk.Button(self.selection_frame, text="Restaurant Name", bg="Black",
+                                           command=lambda: self.handle_graph('Restaurant Name'))
+        self.cuisine_button = tk.Button(self.selection_frame, text="Cuisine", bg="Black",
+                                        command=lambda: self.handle_graph('Cuisine'))
+        self.zone_button = tk.Button(self.selection_frame, text="Zone", bg="Black",
+                                     command=lambda: self.handle_graph('Zone'))
+        self.category_button = tk.Button(self.selection_frame, text="Category", bg="Black",
+                                         command=lambda: self.handle_graph('Category'))
+        self.payment_button = tk.Button(self.selection_frame, text="Payment Mode", bg="Black",
+                                        command=lambda: self.handle_graph('Payment Mode'))
+        self.quantity_button = tk.Button(self.selection_frame, text="Quantity of Items", bg="Black",
+                                         command=lambda: self.handle_graph('Quantity of Items'))
+        self.delivery_button = tk.Button(self.selection_frame, text="Delivery Time", bg="Black",
+                                         command=lambda: self.handle_graph('Delivery Time'))
+        self.food_rate_button = tk.Button(self.selection_frame, text="Food Rating", bg="Black",
+                                          command=lambda: self.handle_graph('Food Rating'))
+        self.deli_rate_button = tk.Button(self.selection_frame, text="Delivery Rating", bg="Black",
+                                          command=lambda: self.handle_graph('Delivery Rating'))
 
         self.density_var = tk.BooleanVar()
-        self.density_toggle = ttk.Checkbutton(self.selection_frame, variable=self.density_var, text='Density', onvalue=True, offvalue=False, command=lambda: self.handle_graph(-99))
+        self.density_toggle = ttk.Checkbutton(self.selection_frame, variable=self.density_var, text='Density',
+                                              onvalue=True, offvalue=False, command=lambda: self.handle_graph(-99))
 
         # Default
         self.handle_graph('Restaurant Name')
@@ -407,9 +490,8 @@ class Hist_Tab(New_Tab):
 
         self.rowconfigure(0, weight=1)
 
-        self.selection_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9), weight=1, uniform=True)
+        self.selection_frame.columnconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8, 9), weight=1, uniform=True)
         self.selection_frame.rowconfigure(0, weight=0)
-
 
     def handle_graph(self, col):
         if col != -99:
@@ -464,12 +546,14 @@ class Bar_Tab(New_Tab):
         self.config_text = ttk.Label(self.config_frame, text="Config")
 
         self.bar_config_text = ttk.Label(self.config_frame, text="Bar")
-        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_nominal_cols(), state='readonly')
+        self.bar_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_nominal_cols(),
+                                                state='readonly')
         self.bar_config_combobox.current(0)
         self.bar_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
         self.height_config_text = ttk.Label(self.config_frame, text="Height")
-        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_numerical_cols(), state='readonly')
+        self.height_config_combobox = ttk.Combobox(self.config_frame, values=self.data.get_numerical_cols(),
+                                                   state='readonly')
         self.height_config_combobox.current(0)
         self.height_config_combobox.bind('<<ComboboxSelected>>', self.handle_graph)
 
@@ -515,7 +599,8 @@ class Bar_Tab(New_Tab):
         self.config_frame.rowconfigure(9, weight=1, uniform=True)
 
     def handle_graph(self, *args):
-        self.data.bar_graph(self.bar_config_combobox.get(), self.height_config_combobox.get(), self.values_config_combobox.get())
+        self.data.bar_graph(self.bar_config_combobox.get(), self.height_config_combobox.get(),
+                            self.values_config_combobox.get())
         self.graph_img.draw()
 
 
@@ -534,7 +619,7 @@ class Story_Tab(New_Tab):
         self.graph_img2 = tk.Label(self.graph_frame, image=sct_img2)
         self.graph_img2.image = sct_img2
 
-        description = ('The correlation coefficient of Quantity of Items and Cost are 0.7009\n'
+        description = ('The correlation coefficient of Quantity of Items and Cost are 0.7004\n'
                        'This means that the higher the quantity of items are, the higher cost the order will be.\n'
                        'The reverse holds true as well, The higher the cost of an order is, the more quantity of items there will be.')
 
@@ -542,13 +627,12 @@ class Story_Tab(New_Tab):
 
         path = os.path.join(os.getcwd(), 'img', "correl.png")
         img = Image.open(path)
-        img = img.resize((800,100))
+        img = img.resize((800, 100))
         correl_img = ImageTk.PhotoImage(img)
         self.correl_img = tk.Label(self.desc_frame, image=correl_img)
         self.correl_img.image = correl_img
 
-
-        self.description = tk.Label(self.desc_frame, text=description, fg='white', font=('Arial',14))
+        self.description = tk.Label(self.desc_frame, text=description, fg='white', font=('Arial', 14))
 
     def component_install(self):
         self.graph_img.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -568,12 +652,12 @@ class Story_Tab(New_Tab):
     def create_image(self, img_name):
         path = os.path.join(os.getcwd(), 'img', img_name)
         img = Image.open(path)
-        w,h = img.size
-        aspect_ratio = w/h
+        w, h = img.size
+        aspect_ratio = w / h
         ratio = 2.5
-        height = self.root.winfo_screenheight()/ratio
-        width = height*aspect_ratio
-        size = int(width),int(height)
+        height = self.root.winfo_screenheight() / ratio
+        width = height * aspect_ratio
+        size = int(width), int(height)
         img = img.resize(size)
         return ImageTk.PhotoImage(img)
 
@@ -584,12 +668,13 @@ class Descriptive_Tab(New_Tab):
 
     def component_init(self):
         self.attribute_var = tk.StringVar()
-        self.attribute_select = ttk.Combobox(self, textvariable=self.attribute_var, values=self.data.get_numerical_cols(), state='readonly')
+        self.attribute_select = ttk.Combobox(self, textvariable=self.attribute_var,
+                                             values=self.data.get_numerical_cols(), state='readonly')
         self.attribute_select.current(0)
         self.attribute_select.bind('<<ComboboxSelected>>', lambda ev: self.handle_combobox())
 
         self.stat_var = tk.StringVar()
-        self.stat_label = tk.Label(self, font=('Arial',14), textvariable=self.stat_var)
+        self.stat_label = tk.Label(self, font=('Arial', 14), textvariable=self.stat_var)
 
         self.grid_config()
 
@@ -609,15 +694,16 @@ class Descriptive_Tab(New_Tab):
         self.stat_label.focus_force()
         col = self.attribute_var.get()
         stat = self.data.descriptive(col)
-        self.stat_var.set( ('Count : {}\n'
-                            'Mean : {}\n'
-                            'Std : {}\n'
-                            'Min : {}\n'
-                            'Max : {}\n'
-                            'Q1 : {}\n'
-                            'Q3 : {}\n'
-                            'IQR : {}\n').format(*stat))
+        self.stat_var.set(('Count : {}\n'
+                           'Mean : {}\n'
+                           'Std : {}\n'
+                           'Min : {}\n'
+                           'Max : {}\n'
+                           'Q1 : {}\n'
+                           'Q3 : {}\n'
+                           'IQR : {}\n').format(*stat))
         current = self.attribute_select.current()
+
 
 class About_Tab(New_Tab):
     def __init__(self, root):
@@ -639,11 +725,13 @@ class About_Tab(New_Tab):
 
         self.desc_frame = ttk.Frame(self)
 
-        self.desc_label = ttk.Label(self.desc_frame, text=desc, font=('Arial',15))
+        self.desc_label = ttk.Label(self.desc_frame, text=desc, font=('Arial', 15))
 
         self.button_frame = ttk.Frame(self)
-        self.source_button = ttk.Button(self.button_frame, text="Data Source", command=lambda: self.callback(self.data_source))
-        self.proposal_button = ttk.Button(self.button_frame, text="Proposal", command=lambda: self.callback(self.proposal))
+        self.source_button = ttk.Button(self.button_frame, text="Data Source",
+                                        command=lambda: self.callback(self.data_source))
+        self.proposal_button = ttk.Button(self.button_frame, text="Proposal",
+                                          command=lambda: self.callback(self.proposal))
 
         self.grid_config()
 
@@ -657,13 +745,14 @@ class About_Tab(New_Tab):
 
     def grid_config(self):
         self.columnconfigure(0, weight=1, uniform=True)
-        self.rowconfigure((0,1), weight=1, uniform=True)
+        self.rowconfigure((0, 1), weight=1, uniform=True)
 
-        self.button_frame.columnconfigure((0,1,2), weight=1, uniform=True)
+        self.button_frame.columnconfigure((0, 1, 2), weight=1, uniform=True)
         self.button_frame.rowconfigure(0, weight=1, uniform=True)
 
     def callback(self, url):
         webbrowser.open_new(url)
+
 
 if __name__ == '__main__':
     root = tk.Tk()
