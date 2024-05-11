@@ -2,6 +2,8 @@
 
 ---
 
+## Main Features
+
 Food Data Visualizer was made to help user visualize and analyze people's behavior when choosing and ordering food.<br>
 This program lets user be able to : <br>
 1. Filter and view data
@@ -10,20 +12,12 @@ This program lets user be able to : <br>
 4. See an example data story
 5. Analyze descriptive statistics
 
-Data attributes consists of 
-- Restaurant Name
-- Cuisine
-- Zone
-- Category
-- Payment Mode
-- Quantity of Items
-- Cost
-- Delivery Time
-- Food Rating
-- Delivery Rating.
+---
 
-The names of the restaurants used are only for representational purposes.<br>
-They do not represent any real life nouns, but are only fictional.
+## System Requirements
+
+* Python >= 3.12
+* Other packages in requirement.txt
 
 ---
 
@@ -35,7 +29,6 @@ They do not represent any real life nouns, but are only fictional.
 
 ---
 # Files
-
 
 | File Name       | Description                                            |
 |-----------------|--------------------------------------------------------|
@@ -54,3 +47,8 @@ They do not represent any real life nouns, but are only fictional.
 ```
 python main.py
 ```
+---
+## Disclaimer
+
+The names of the restaurants used are only for representational purposes.<br>
+They do not represent any real life nouns, but are only fictional.

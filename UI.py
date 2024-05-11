@@ -525,7 +525,7 @@ class Story_Tab(New_Tab):
         super().__init__(root)
 
     def component_init(self):
-        self.graph_frame = tk.Frame(self)
+        self.graph_frame = ttk.Frame(self)
 
         sct_img = self.create_image('scatter.png')
         self.graph_img = tk.Label(self.graph_frame, image=sct_img)
@@ -539,26 +539,43 @@ class Story_Tab(New_Tab):
                        'This means that the higher the quantity of items are, the higher cost the order will be.\n'
                        'The reverse holds true as well, The higher the cost of an order is, the more quantity of items there will be.')
 
-        self.desc_frame = tk.Frame(self)
+        self.desc_frame = ttk.Frame(self)
 
-        correl_img = self.create_image('correl.png')
+        path = os.path.join(os.getcwd(), 'img', "correl.png")
+        img = Image.open(path)
+        img = img.resize((800,100))
+        correl_img = ImageTk.PhotoImage(img)
         self.correl_img = tk.Label(self.desc_frame, image=correl_img)
         self.correl_img.image = correl_img
+
 
         self.description = tk.Label(self.desc_frame, text=description, fg='white', font=('Arial',14))
 
     def component_install(self):
-        self.graph_img.pack(fill=tk.BOTH)
-        self.graph_img2.pack(fill=tk.BOTH)
-        self.graph_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.graph_img.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.graph_img2.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.graph_frame.grid(column=1, row=0, padx=50, pady=50)
 
-        self.correl_img.pack(fill=tk.BOTH, expand=True)
-        self.description.pack(fill=tk.BOTH, expand=True)
-        self.desc_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.correl_img.grid(sticky=tk.SE)
+        self.description.grid(sticky=tk.NE)
+        self.desc_frame.grid(column=2, row=0)
+
+    def grid_config(self):
+        self.columnconfigure(0, weight=1, uniform=True)
+        self.columnconfigure(1, weight=1, uniform=True)
+        self.columnconfigure(2, weight=1, uniform=True)
+        self.rowconfigure(0, weight=1, uniform=True)
 
     def create_image(self, img_name):
         path = os.path.join(os.getcwd(), 'img', img_name)
         img = Image.open(path)
+        w,h = img.size
+        aspect_ratio = w/h
+        ratio = 2.5
+        height = self.root.winfo_screenheight()/ratio
+        width = height*aspect_ratio
+        size = int(width),int(height)
+        img = img.resize(size)
         return ImageTk.PhotoImage(img)
 
 
