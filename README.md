@@ -63,15 +63,32 @@ git clone https://github.com/NoMoneyDev/Food-Delivery-Data-Visualizer.git
 cd Food-Delivery-Data-Visualizer
 ```
 
-3. Install required packages
+3. Create virtual environment
+```
+python -m venv env
+```
+
+4. Activate the virtual environment
+
+For window:
+```
+.\env\Scripts\activate
+```
+For macOS or Linux:
+```
+source env/bin/activate
+```
+
+5. Install required packages
 ```
 pip install -r requirements.txt
 ```
 
-4. Run main.py
+6. Run main.py
 ```
 python main.py
 ```
+
 ---
 
 ## Files
