@@ -31,7 +31,8 @@ This program lets user be able to : <br>
 
 ## Screenshots
 
-![img.png](img.png)
+### Data Tab
+![screenshots/data.png](screenshots/data.png)
 
 ---
 
