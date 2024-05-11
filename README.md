@@ -28,6 +28,19 @@ This program lets user be able to : <br>
 [Proposal](https://docs.google.com/document/d/1saBdR1z_1J8v7o5Eu1hJuhFq35pFtAGzNEH_F-Dq998)
 
 ---
+
+## Screenshots
+
+![img.png](img.png)
+
+---
+
+## How to run
+```
+python main.py
+```
+---
+
 # Files
 
 | File Name       | Description                                            |
@@ -39,15 +52,8 @@ This program lets user be able to : <br>
 | img             | Directory used to store graphs for data story and logo |
 | requirement.txt | .txt file listing required packages to run the program |
 
-
-
-
-
-## How to run
-```
-python main.py
-```
 ---
+
 ## Disclaimer
 
 The names of the restaurants used are only for representational purposes.<br>

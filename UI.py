@@ -59,7 +59,6 @@ class UI:
     def config_grid(self):
         self.menu_frame.columnconfigure((0,1,2,3,4,5,6), weight=1, uniform=True)
         self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=self.screenheight//48)
-        print(self.screenheight)
 
     def component_install(self):
         self.data_tab_button.grid(column=0, row=0, sticky=tk.NSEW)
@@ -495,8 +494,8 @@ class Bar_Tab(New_Tab):
         self.config_frame.pack(padx=10, side=tk.RIGHT, fill=tk.BOTH)
 
     def grid_config(self):
-        self.columnconfigure(0)
-        self.columnconfigure(1)
+        self.columnconfigure(0, weight=3, uniform=True)
+        self.columnconfigure(1, weight=2, uniform=True)
 
         self.rowconfigure(0, weight=1)
 
@@ -582,9 +581,6 @@ class Story_Tab(New_Tab):
 class Descriptive_Tab(New_Tab):
     def __init__(self, root):
         super().__init__(root)
-        self.combobox_style = ttk.Style()
-        self.combobox_style.map('TCombobox', highlightcolor=[('focus', 'black'),
-                                                                  ('!focus', 'black')])
 
     def component_init(self):
         self.attribute_var = tk.StringVar()
