@@ -47,11 +47,11 @@ This program lets user be able to : <br>
 
 ## Installation
 
-Install git [here](https://git-scm.com/downloads) if you haven't
+a. Install git [here](https://git-scm.com/downloads) if you haven't
 
-Install python [here](https://www.python.org/downloads/) if you haven't
+b. Install python [here](https://www.python.org/downloads/) if you haven't
 
-0. Open Terminal/Command Prompt
+c. Open Terminal/Command Prompt
 
 1. Clone this repository
 ```
