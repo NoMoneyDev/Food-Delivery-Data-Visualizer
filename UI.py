@@ -20,6 +20,10 @@ class UI:
         self.root.state('zoomed')
         sv_ttk.set_theme("dark", root=self.root)
         self.root.title("Food Delivery Data Visualizer")
+        path = os.path.join(os.getcwd(), 'img', 'logo.png')
+        icon = Image.open(path)
+        logo = ImageTk.PhotoImage(icon)
+        root.wm_iconphoto(False, logo)
         self.create_style()
         self.component_init()
 
@@ -51,7 +55,8 @@ class UI:
 
     def config_grid(self):
         self.menu_frame.columnconfigure((0,1,2,3,4,5), weight=1, uniform=True)
-        self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=30)
+        self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=self.screenheight//48)
+        print(self.screenheight)
 
     def component_install(self):
         self.data_tab_button.grid(column=0, row=0, sticky=tk.NSEW)
@@ -523,6 +528,11 @@ class Story_Tab(New_Tab):
                        'The reverse holds true as well, The higher the cost of an order is, the more quantity of items there will be.')
 
         self.desc_frame = tk.Frame(self)
+
+        correl_img = self.create_image('correl.png')
+        self.correl_img = tk.Label(self.desc_frame, image=correl_img)
+        self.correl_img.image = correl_img
+
         self.description = tk.Label(self.desc_frame, text=description, fg='white', font=('Arial',14))
 
     def component_install(self):
@@ -530,6 +540,7 @@ class Story_Tab(New_Tab):
         self.graph_img2.pack(fill=tk.BOTH)
         self.graph_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
+        self.correl_img.pack(fill=tk.BOTH, expand=True)
         self.description.pack(fill=tk.BOTH, expand=True)
         self.desc_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
@@ -570,6 +581,7 @@ class Descriptive_Tab(New_Tab):
         self.rowconfigure(1, weight=3, uniform=True)
 
     def handle_combobox(self, *args):
+        self.stat_label.focus_force()
         col = self.attribute_var.get()
         stat = self.data.descriptive(col)
         self.stat_var.set( ('Count : {}\n'
@@ -581,8 +593,6 @@ class Descriptive_Tab(New_Tab):
                             'Q3 : {}\n'
                             'IQR : {}\n').format(*stat))
         current = self.attribute_select.current()
-        self.attribute_select.current(0)
-        self.attribute_select.current(current)
 
 
 
