@@ -645,7 +645,7 @@ class Story_Tab(New_Tab):
 
         path = os.path.join(os.getcwd(), 'img', "correl.png")
         img = Image.open(path)
-        img = img.resize((800, 100))
+        img = img.resize((600, 75))
         correl_img = ImageTk.PhotoImage(img)
         self.correl_img = tk.Label(self.desc_frame, image=correl_img)
         self.correl_img.image = correl_img
