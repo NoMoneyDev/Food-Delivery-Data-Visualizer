@@ -32,11 +32,43 @@ This program lets user be able to : <br>
 ## Screenshots
 
 ### Data Tab
-![screenshots/data.png](screenshots/data.png)
+![data tab](screenshots/data.png)
+
+### Histogram Tab
+![histogram tab](screenshots/hist.png)
+
+### Bar Graph Tab
+![bar graph tab](screenshots/bar.png)
+
+### Data Story Tab
+![data story tab](screenshots/story.png)
 
 ---
 
-## How to run
+## Installation
+
+Install git [here](https://git-scm.com/downloads) if you haven't
+
+Install python [here](https://www.python.org/downloads/) if you haven't
+
+0. Open Terminal/Command Prompt
+
+1. Clone this repository
+```
+git clone https://github.com/NoMoneyDev/Food-Delivery-Data-Visualizer.git
+```
+
+2. Change directory to this project
+```
+cd Food-Delivery-Data-Visualizer
+```
+
+3. Install required packages
+```
+pip install -r requirements.txt
+```
+
+4. Run main.py
 ```
 python main.py
 ```
