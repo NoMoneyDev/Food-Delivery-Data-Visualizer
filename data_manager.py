@@ -6,7 +6,7 @@ import numpy as np
 
 class Data_Manager:
     def __init__(self):
-        self.__data = pd.read_csv("Orders Data.csv")
+        self.__data = pd.read_csv("data/Orders Data.csv")
         self.figure = plt.Figure(figsize=(6, 4), dpi=100)
         self.figure.patch.set_facecolor('grey')
         self.ax = self.figure.add_subplot()

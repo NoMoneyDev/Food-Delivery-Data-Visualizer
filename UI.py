@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import matplotlib as plt
-import seaborn as sns
 from abc import abstractmethod
 from data_manager import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -12,6 +11,8 @@ import sv_ttk
 import time
 import os
 from PIL import Image, ImageTk
+import webbrowser
+
 
 
 class UI:
@@ -38,6 +39,7 @@ class UI:
         self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph', command=lambda: self.change_tab('bar'))
         self.story_tab_button = tk.Button(self.menu_frame, text='Story', command=lambda: self.change_tab('story'))
         self.descriptive_tab_button = tk.Button(self.menu_frame, text='Descriptive', command=lambda: self.change_tab('desc'))
+        self.about_tab_button = tk.Button(self.menu_frame, text='About',command=lambda: self.change_tab('about'))
         self.quit_button = tk.Button(self.menu_frame, text='Quit', command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
@@ -45,6 +47,7 @@ class UI:
         self.hist_tab = Hist_Tab(self.root)
         self.story_tab = Story_Tab(self.root)
         self.descriptive_tab = Descriptive_Tab(self.root)
+        self.about_tab = About_Tab(self.root)
         self.config_grid()
         self.component_install()
 
@@ -54,7 +57,7 @@ class UI:
         self.change_tab('data')
 
     def config_grid(self):
-        self.menu_frame.columnconfigure((0,1,2,3,4,5), weight=1, uniform=True)
+        self.menu_frame.columnconfigure((0,1,2,3,4,5,6), weight=1, uniform=True)
         self.menu_frame.rowconfigure(0, weight=1, uniform=True, minsize=self.screenheight//48)
         print(self.screenheight)
 
@@ -64,7 +67,8 @@ class UI:
         self.bar_tab_button.grid(column=2, row=0, sticky=tk.NSEW)
         self.story_tab_button.grid(column=3, row=0, sticky=tk.NSEW)
         self.descriptive_tab_button.grid(column=4, row=0, sticky=tk.NSEW)
-        self.quit_button.grid(column=5, row=0, sticky=tk.NSEW)
+        self.about_tab_button.grid(column=5, row=0, sticky=tk.NSEW)
+        self.quit_button.grid(column=6, row=0, sticky=tk.NSEW)
 
         self.menu_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
@@ -87,6 +91,9 @@ class UI:
             case 'desc':
                 self.descriptive_tab_button.configure(bg='Yellow', fg='Black')
                 self.current_tab = self.descriptive_tab
+            case 'about':
+                self.about_tab_button.configure(bg='Yellow', fg='Black')
+                self.current_tab = self.about_tab
         self.current_tab.pack_tab()
 
     def reset_menu_color(self):
@@ -95,6 +102,7 @@ class UI:
         self.bar_tab_button.config(bg='Black', fg='White')
         self.story_tab_button.config(bg='Black', fg='White')
         self.descriptive_tab_button.config(bg='Black', fg='White')
+        self.about_tab_button.config(bg='Black', fg='White')
         self.quit_button.config(bg='Black', fg='White')
 
     @property
@@ -301,13 +309,17 @@ class Data_Tab(New_Tab):
             self.refresh_data()
             return
 
+        if ',' in filter and '-' in filter:
+            messagebox.showerror('INVALID FILTER VALUES', 'Value Error: Must be in format "A-B" or "A"\n')
+            return
+
         # Check nominal value filter
         if col in self.data.get_nominal_cols():
             if ',' in filter:
                 filters = filter.split(',')
                 valid_cols = self.data[col].unique()
                 if not all(c in valid_cols for c in filters):
-                    messagebox.showerror('INVALID FILTER VALUES', 'Value Error: All values in the filter must be in the data')
+                    messagebox.showerror('INVALID FILTER VALUES', 'Value Error: All values in the filter must be in the data\n')
                     return
                 mode = 'multexact'
             else:
@@ -594,7 +606,51 @@ class Descriptive_Tab(New_Tab):
                             'IQR : {}\n').format(*stat))
         current = self.attribute_select.current()
 
+class About_Tab(New_Tab):
+    def __init__(self, root):
+        super().__init__(root)
+        self.data_source = "https://www.kaggle.com/datasets/mohamedharris/restaurant-order-details\n"
+        self.proposal = "https://docs.google.com/document/d/1saBdR1z_1J8v7o5Eu1hJuhFq35pFtAGzNEH_F-Dq998"
 
+    def component_init(self):
+        desc = ("Food Data Visualizer was made to help user visualize\n"
+                "and analyze people's behavior when choosing and ordering food.\n"
+                "This program lets user be able to : \n"
+                "Filter and view data, Create and analyze histograms, Create and analyze bar graphs, \n"
+                "See an example data story, Analyze descriptive statistics\n"
+                "Data attributes consists of \n"
+                "Restaurant Name,Cuisine,Zone,Category,Payment Mode,Quantity of Items,\n"
+                "Cost,Delivery Time,Food Rating, and Delivery Rating.\n\n"
+                "The names of the restaurants used are only for representational purposes.\n"
+                "They do not represent any real life nouns, but are only fictional.\n")
+
+        self.desc_frame = ttk.Frame(self)
+
+        self.desc_label = ttk.Label(self.desc_frame, text=desc, font=('Arial',15))
+
+        self.button_frame = ttk.Frame(self)
+        self.source_button = ttk.Button(self.button_frame, text="Data Source", command=lambda: self.callback(self.data_source))
+        self.proposal_button = ttk.Button(self.button_frame, text="Proposal", command=lambda: self.callback(self.proposal))
+
+        self.grid_config()
+
+    def component_install(self):
+        self.desc_label.grid(column=0, row=0, sticky=tk.S, padx=20)
+        self.desc_frame.grid(column=0, row=0, sticky=tk.S)
+
+        self.source_button.grid(column=0, row=0, sticky=tk.N, padx=20)
+        self.proposal_button.grid(column=1, row=0, sticky=tk.N, padx=20)
+        self.button_frame.grid(column=0, row=1, sticky=tk.N)
+
+    def grid_config(self):
+        self.columnconfigure(0, weight=1, uniform=True)
+        self.rowconfigure((0,1), weight=1, uniform=True)
+
+        self.button_frame.columnconfigure((0,1,2), weight=1, uniform=True)
+        self.button_frame.rowconfigure(0, weight=1, uniform=True)
+
+    def callback(self, url):
+        webbrowser.open_new(url)
 
 if __name__ == '__main__':
     root = tk.Tk()
