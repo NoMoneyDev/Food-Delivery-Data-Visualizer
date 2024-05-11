@@ -1,17 +1,13 @@
-import abc
+import os
+import webbrowser
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-import matplotlib as plt
 from abc import abstractmethod
-from data_manager import *
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-matplotlib.use('TkAgg')
-import sv_ttk
-import time
-import os
 from PIL import Image, ImageTk
-import webbrowser
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+import sv_ttk
+from data_manager import Data_Manager
 
 
 class UI:
@@ -33,13 +29,18 @@ class UI:
 
     def component_init(self):
         self.menu_frame = tk.Frame(self.root)
-        self.data_tab_button = tk.Button(self.menu_frame, text='Data', command=lambda: self.change_tab('data'))
-        self.hist_tab_button = tk.Button(self.menu_frame, text='Histogram', command=lambda: self.change_tab('hist'))
-        self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph', command=lambda: self.change_tab('bar'))
-        self.story_tab_button = tk.Button(self.menu_frame, text='Story', command=lambda: self.change_tab('story'))
+        self.data_tab_button = tk.Button(self.menu_frame, text='Data',
+                                         command=lambda: self.change_tab('data'))
+        self.hist_tab_button = tk.Button(self.menu_frame, text='Histogram',
+                                         command=lambda: self.change_tab('hist'))
+        self.bar_tab_button = tk.Button(self.menu_frame, text='Bar Graph',
+                                        command=lambda: self.change_tab('bar'))
+        self.story_tab_button = tk.Button(self.menu_frame, text='Story',
+                                          command=lambda: self.change_tab('story'))
         self.descriptive_tab_button = tk.Button(self.menu_frame, text='Descriptive',
                                                 command=lambda: self.change_tab('desc'))
-        self.about_tab_button = tk.Button(self.menu_frame, text='About', command=lambda: self.change_tab('about'))
+        self.about_tab_button = tk.Button(self.menu_frame, text='About',
+                                          command=lambda: self.change_tab('about'))
         self.quit_button = tk.Button(self.menu_frame, text='Quit', command=self.root.destroy)
 
         self.data_tab = Data_Tab(self.root)
@@ -131,11 +132,9 @@ class New_Tab(tk.Frame):
     def component_init(self):
         pass
 
-    @abstractmethod
     def pack_tab(self):
         self.pack(fill=tk.BOTH, expand=True)
 
-    @abstractmethod
     def unpack(self):
         self.pack_forget()
 
@@ -149,30 +148,39 @@ class Data_Tab(New_Tab):
         scrnwidth = self.root.winfo_screenwidth()
         self.table_frame = ttk.Frame(self, width=scrnwidth * 0.55)
         self.filters_frame = ttk.Frame(self)
-        self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(), displaycolumns="#all",
-                                  show="headings")
+        self.table = ttk.Treeview(self.table_frame, columns=self.data.get_cols(),
+                                  displaycolumns="#all", show="headings")
         self.table_col_config()
         self.set_table_col()
         self.insert_data()
         self.filter_text = ttk.Label(self.filters_frame, text="Filters")
 
         self.quantity_frame = tk.Frame(self.filters_frame)
-        self.quantity_filter_text = tk.Label(self.quantity_frame, text="Quantity of Items", font=self.font)
+        self.quantity_filter_text = tk.Label(self.quantity_frame, text="Quantity of Items",
+                                             font=self.font)
         self.quantity_filter_var = tk.StringVar(self.quantity_frame, "1-7, 5")
-        self.quantity_filter_entry = ttk.Entry(self.quantity_frame, textvariable=self.quantity_filter_var)
-        self.quantity_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Quantity of Items',
-                                                                                  self.quantity_filter_var.get()))
+        self.quantity_filter_entry = ttk.Entry(self.quantity_frame,
+                                               textvariable=self.quantity_filter_var)
+        self.quantity_filter_entry.bind('<Return>',
+                                        lambda ev: self.handle_filter(ev, 'Quantity of Items',
+                                                                  self.quantity_filter_var.get()))
 
         self.cost_frame = tk.Frame(self.filters_frame)
         self.cost_filter_text = tk.Label(self.cost_frame, text="Cost", font=self.font)
         self.cost_filter_var = tk.StringVar(self.cost_frame, "100-700")
         self.cost_filter_entry = ttk.Entry(self.cost_frame, textvariable=self.cost_filter_var)
-        self.cost_filter_entry.bind('<Return>', lambda ev: self.handle_filter(ev, 'Cost', self.cost_filter_var.get()))
+        self.cost_filter_entry.bind('<Return>',
+                                    lambda ev: self.handle_filter(ev, 'Cost',
+                                                                self.cost_filter_var.get()))
 
         self.payment_frame = tk.Frame(self.filters_frame)
-        self.payment_filter_text = tk.Label(self.payment_frame, text="Payment mode", font=self.font)
-        self.payment_filter_listbox = tk.Listbox(self.payment_frame, selectmode=tk.MULTIPLE, height=3,
-                                                 selectbackground='grey', relief=tk.FLAT, highlightcolor='black',
+        self.payment_filter_text = tk.Label(self.payment_frame,
+                                            text="Payment mode",
+                                            font=self.font)
+        self.payment_filter_listbox = tk.Listbox(self.payment_frame,
+                                                 selectmode=tk.MULTIPLE, height=3,
+                                                 selectbackground='grey', relief=tk.FLAT,
+                                                 highlightcolor='black',
                                                  exportselection=False)
         self.payment_filter_listbox.insert(tk.END, 'Cash', 'Credit Card', 'Debit Card')
         self.payment_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect(ev))
@@ -208,23 +216,29 @@ class Data_Tab(New_Tab):
         self.restaurant_filter_combobox.current(0)
         self.restaurant_filter_combobox.bind('<<ComboboxSelected>>',
                                              lambda ev: self.handle_filter(ev, 'Restaurant Name',
-                                                                           self.restaurant_filter_var.get()))
+                                                                self.restaurant_filter_var.get()))
 
         self.category_frame = tk.Frame(self.filters_frame)
         self.category_filter_text = tk.Label(self.category_frame, text="Category", font=self.font)
         self.category_filter_var = tk.StringVar()
-        self.category_filter_combobox = ttk.Combobox(self.category_frame, values=['None', 'Ordinary', 'Pro'],
-                                                     textvariable=self.category_filter_var, state='readonly')
+        self.category_filter_combobox = ttk.Combobox(self.category_frame,
+                                                     values=['None', 'Ordinary', 'Pro'],
+                                                     textvariable=self.category_filter_var,
+                                                     state='readonly')
         self.category_filter_combobox.current(0)
-        self.category_filter_combobox.bind('<<ComboboxSelected>>', lambda ev: self.handle_filter(ev, 'Category',
-                                                                                                 self.category_filter_var.get()))
+        self.category_filter_combobox.bind('<<ComboboxSelected>>',
+                                           lambda ev: self.handle_filter(ev, 'Category',
+                                                                  self.category_filter_var.get()))
 
         self.cuisine_frame = tk.Frame(self.filters_frame)
         self.cuisine_filter_text = tk.Label(self.cuisine_frame, text="Cuisine", font=self.font)
-        self.cuisine_filter_listbox = tk.Listbox(self.cuisine_frame, selectmode=tk.MULTIPLE, height=4,
-                                                 selectbackground='grey', relief=tk.FLAT, highlightcolor='black',
+        self.cuisine_filter_listbox = tk.Listbox(self.cuisine_frame, selectmode=tk.MULTIPLE,
+                                                 height=4,
+                                                 selectbackground='grey', relief=tk.FLAT,
+                                                 highlightcolor='black',
                                                  exportselection=False)
-        self.cuisine_filter_listbox.insert(tk.END, 'African', 'Continental', 'Arabian', 'Chinese', 'Belgian', 'French',
+        self.cuisine_filter_listbox.insert(tk.END, 'African', 'Continental', 'Arabian',
+                                           'Chinese', 'Belgian', 'French',
                                            'North Indian', 'South Indian')
 
         self.cuisine_filter_listbox.bind('<Button-1>', lambda ev: self.check_deselect(ev))
@@ -396,7 +410,8 @@ class Data_Tab(New_Tab):
                 mode = 'multexact'
             else:
                 if filter not in self.data.get_unique_val(col):
-                    messagebox.showerror('INVALID FILTER VALUE', 'Value Error: Filter value must be in the data')
+                    messagebox.showerror('INVALID FILTER VALUE',
+                                         'Value Error: Filter value must be in the data')
                     return
                 mode = 'exact'
 
@@ -405,12 +420,14 @@ class Data_Tab(New_Tab):
             if '-' in filter:
                 filters = filter.split('-')
                 if not all(c.isdigit() for c in filters):
-                    messagebox.showerror('INVALID FILTER VALUES', 'Type Error: Filter value must be integer')
+                    messagebox.showerror('INVALID FILTER VALUES',
+                                         'Type Error: Filter value must be integer')
                     return
                 mode = 'range'
             else:
                 if not filter.isdigit():
-                    messagebox.showerror('INVALID FILTER VALUES', 'Type Error: Filter value must be integer')
+                    messagebox.showerror('INVALID FILTER VALUES',
+                                         'Type Error: Filter value must be integer')
                     return
                 filters = filter
                 mode = 'exact'
@@ -621,7 +638,8 @@ class Story_Tab(New_Tab):
 
         description = ('The correlation coefficient of Quantity of Items and Cost are 0.7004\n'
                        'This means that the higher the quantity of items are, the higher cost the order will be.\n'
-                       'The reverse holds true as well, The higher the cost of an order is, the more quantity of items there will be.')
+                       'The reverse holds true as well, The higher the cost of an order is, '
+                       'the more quantity of items there will be.')
 
         self.desc_frame = ttk.Frame(self)
 
