@@ -249,11 +249,11 @@ class Data_Tab(New_Tab):
 
     def component_install(self):
         self.table.pack(side=tk.LEFT, fill=tk.Y)
-        self.table_frame.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.table_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10)
 
         self.filter_text.grid(column=1, row=0, sticky=tk.W)
 
-        self.quantity_frame.grid(column=1, row=1)
+        self.quantity_frame.grid(column=1, row=1, padx=20)
         self.quantity_filter_text.pack()
         self.quantity_filter_entry.pack()
 
@@ -303,11 +303,11 @@ class Data_Tab(New_Tab):
             self.table.column('#' + str(col_num), minwidth=0, width=optimal_width, stretch=False)
 
     def grid_config(self):
-        self.filters_frame.columnconfigure(0, weight=1, uniform=True)
+        # self.filters_frame.columnconfigure(0, weight=1, uniform=True)
         self.filters_frame.columnconfigure(1, weight=1, uniform=True)
         self.filters_frame.columnconfigure(2, weight=1, uniform=True)
         self.filters_frame.columnconfigure(3, weight=1, uniform=True)
-        self.filters_frame.columnconfigure(4, weight=1, uniform=True)
+        # self.filters_frame.columnconfigure(4, weight=1, uniform=True)
 
         self.filters_frame.rowconfigure(0, weight=1)
         self.filters_frame.rowconfigure(1, weight=1)
