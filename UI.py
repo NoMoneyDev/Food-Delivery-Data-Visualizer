@@ -586,7 +586,7 @@ class Descriptive_Tab(New_Tab):
         self.attribute_var = tk.StringVar()
         self.attribute_select = ttk.Combobox(self, textvariable=self.attribute_var, values=self.data.get_numerical_cols(), state='readonly')
         self.attribute_select.current(0)
-        self.attribute_select.bind('<<ComboboxSelected>>', self.handle_combobox)
+        self.attribute_select.bind('<<ComboboxSelected>>', lambda ev: self.handle_combobox())
 
         self.stat_var = tk.StringVar()
         self.stat_label = tk.Label(self, font=('Arial',14), textvariable=self.stat_var)
@@ -605,7 +605,7 @@ class Descriptive_Tab(New_Tab):
         self.rowconfigure(0, weight=2, uniform=True)
         self.rowconfigure(1, weight=3, uniform=True)
 
-    def handle_combobox(self, *args):
+    def handle_combobox(self):
         self.stat_label.focus_force()
         col = self.attribute_var.get()
         stat = self.data.descriptive(col)

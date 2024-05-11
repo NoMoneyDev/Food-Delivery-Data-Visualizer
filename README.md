@@ -21,7 +21,7 @@ This program lets user be able to : <br>
 
 ---
 
-# Data Source
+## Data Source
 
 [Restaurant Order Details](https://www.kaggle.com/datasets/mohamedharris/restaurant-order-details)
 
@@ -74,7 +74,7 @@ python main.py
 ```
 ---
 
-# Files
+## Files
 
 | File Name       | Description                                            |
 |-----------------|--------------------------------------------------------|
@@ -84,6 +84,18 @@ python main.py
 | data            | Directory used to store data file                      |
 | img             | Directory used to store graphs for data story and logo |
 | requirement.txt | .txt file listing required packages to run the program |
+
+---
+
+## Diagrams
+
+### Class Diagram
+
+![UML-ClassDiagram](Diagrams/UML-ClassDiagram.png)
+
+### Sequence Diagram
+
+![UML-SequenceDiagram](Diagrams/UML-SequenceDiagram.png)
 
 ---
 

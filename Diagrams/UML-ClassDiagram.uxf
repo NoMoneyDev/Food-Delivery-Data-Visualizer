@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>567</x>
+      <y>168</y>
+      <w>147</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>UI
+--
+root
+current_tab
+menu_frame
+--
+create_style()
+component_init()
+component_install()
+config_grid()
+change_tab(tab: str)
+reset_menu_color()
+screenwidth()
+screenheight()
+run()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>826</x>
+      <y>168</y>
+      <w>147</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;tk.Frame&gt;
+New_Tab {abstract}
+--
+root
+font
+data : Data_Manager
+--
+component_init()
+pack_tab()
+unpack()
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>938</y>
+      <w>238</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Descriptive_Tab
+--
+root
+attribute_var
+attribute_select
+stat_var
+stat_label
+--
+grid_config()
+handle_combobox()
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>154</y>
+      <w>238</w>
+      <h>266</h>
+    </coordinates>
+    <panel_attributes>Data_Tab
+--
+root
+table
+table_frame
+filter_frame
+quantity_frame
+cost_frame
+payment_frame
+food_rate_frame
+deli_rate_frame
+active_filter
+--
+table_col_config()
+grid_config()
+set_table_col()
+insert_data()
+clear_data()
+reset_filter(event: tk.event)
+check_deselect()
+handle_payment()
+handle_filter(event: tk.event, col: str, filter:str)
+get_filter_label()
+refresh_data()
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>448</y>
+      <w>238</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Hist_Tab
+--
+root
+graph_frame
+graph_img
+selection_frame
+--
+grid_config()
+handle_graph(col: str)
+reset_button_color()
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>791</y>
+      <w>238</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>Story_Tab
+--
+root
+graph_frame
+graph_img
+desc_frame
+correl_img
+description
+--
+grid_config()
+create_image(img_name: str)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>1078</y>
+      <w>238</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>About_Tab
+--
+root
+data_source
+proposal
+desc_frame
+desc_label
+button_frame
+source_button
+proposal_button
+--
+grid_config()
+callback(url: str)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1099</x>
+      <y>595</y>
+      <w>238</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>Bar_Tab
+--
+root
+graph_frame
+config_frame
+bar_config_text
+bar_config_combobox
+height_config_text
+height_config_combobox
+values_config_text
+values_config_combobox
+--
+handle_graph(col: str)
+grid_config()
+reset_button_color()
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>210</y>
+      <w>98</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>210</y>
+      <w>98</w>
+      <h>315</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;430.0;120.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>504</y>
+      <w>98</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;270.0;120.0;270.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>686</y>
+      <w>98</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0;120.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>833</y>
+      <w>98</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;210.0;120.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>973</y>
+      <w>98</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0;120.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>826</x>
+      <y>343</y>
+      <w>147</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>Data_Manager
+--
+-root
+figure
+ax
+-active_hist
+--
+get_cols()
+get_nominal_cols()
+get_numerical_cols()
+data()
+get_rows()
+to_row()
+filter_data(filters: dict)
+histogram(col: str, density: bool)
+bar_graph(bar: str, height:str, val: str)
+descriptive(col: str)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>609</x>
+      <y>56</y>
+      <w>63</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>{script}
+main
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>966</x>
+      <y>210</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>889</x>
+      <y>273</y>
+      <w>21</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>707</x>
+      <y>203</y>
+      <w>133</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>84</y>
+      <w>21</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
